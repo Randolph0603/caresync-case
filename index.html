@@ -253,6 +253,9 @@ const CONFIG = {
 
 /* 課堂版不含後記。自學版由老師另行產生，在此填入後記物件。 */
 const EPILOGUE = null; /*EPILOGUE_SLOT*/
+/* 加密版後記：學生交出最終選擇後，輸入老師公布的密碼才能解開。由 tools/make-locked.js 填入。 */
+const EPILOGUE_LOCKED = {"v":1,"iter":310000,"salt":"EO+0cJgsVmAcCIr+Qfp94A==","iv":"rRwXswWf7p+YZ1bk","ct":"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"};
+const HAS_EPILOGUE = !!(EPILOGUE || EPILOGUE_LOCKED);
 
 /* 教材內容依《CareSync 個案》學生版繁體中文 v2.5（2026-10-20）。
    段落可用：字串（一般段落）、{h:'小標'}、{quote:'引文', src:'出處'}、{ul:[...]}、
@@ -1154,24 +1157,59 @@ function renderConsequences() {
     h('p', {}, '每條路徑都有可能的代價與待驗證的問題。所有選項都可展開比較；這裡沒有總分、成功率或推薦標記。'),
     cards
   ];
-  if (EPILOGUE) parts.push(renderEpilogueBlock(a));
+  if (HAS_EPILOGUE) parts.push(renderEpilogueBlock(a));
   else parts.push(h('div', { class: 'callout' }, h('p', {}, '課堂版不含後記。老師會在再次表態後另行發下；讀完或課堂討論後，請在下一步填寫反思。')));
   return shell(10, parts, navRow(10, { nextLabel: '結尾摘要與匯出 →' }));
 }
 function renderEpilogueBlock(a) {
   const box = h('div', { class: 'card', id: 'epilogue', tabindex: '-1' });
-  const fill = () => {
+  const fill = E => {
     box.textContent = '';
-    box.append(h('div', {}, h('h2', { style: 'margin-top:0' }, EPILOGUE.title),
-      h('p', { class: 'notice' }, EPILOGUE.disclaimer),
-      renderBlocks(EPILOGUE.blocks),
+    box.append(h('div', {}, h('h2', { style: 'margin-top:0' }, E.title),
+      h('p', { class: 'notice' }, E.disclaimer),
+      renderBlocks(E.blocks),
       h('p', { class: 'small' }, `開啟時間：${fmt(a.epilogueOpenedAt)}。看過後記不會改寫你已提交的決策。`)));
   };
-  if (a.epilogueOpenedAt) fill();
-  else box.append(h('p', { style: 'margin-top:0' }, '後記描述公司後來的作法，不是唯一正確答案。你的決策已提交，閱讀後記不會改變它。'),
-    h('button', { type: 'button', class: 'btn btn-primary', onclick: () => { a.epilogueOpenedAt = nowISO(); saveNow(); fill(); box.focus(); } },
-      '我已完成決策，閱讀後記'));
+  const E = EPILOGUE || a.epilogue;
+  if (a.epilogueOpenedAt && E) { fill(E); return box; }
+  const intro = h('p', { style: 'margin-top:0' }, '後記描述公司後來的作法，不是唯一正確答案。你的決策已提交，閱讀後記不會改變它。');
+  if (EPILOGUE) {
+    box.append(intro, h('button', { type: 'button', class: 'btn btn-primary', onclick: () => {
+      a.epilogueOpenedAt = nowISO(); saveNow(); fill(EPILOGUE); box.focus(); } }, '我已完成決策，閱讀後記'));
+    return box;
+  }
+  const form = h('form', { novalidate: true });
+  const pw = { value: '' };
+  const status = h('p', { class: 'err', role: 'alert', hidden: true });
+  const btn = h('button', { type: 'submit', class: 'btn btn-primary' }, '解鎖並閱讀後記');
+  form.append(textField({ obj: pw, path: 'value', label: '後記密碼', single: true, max: 100, store: false,
+    hint: '課堂討論結束後，由老師公布。大小寫與空格不影響。' }), status, h('div', { class: 'btn-row' }, btn));
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (btn.disabled) return;
+    if (blank(pw.value)) { status.textContent = '請輸入老師公布的密碼。'; status.hidden = false; return; }
+    btn.disabled = true; btn.textContent = '解鎖中…'; status.hidden = true;
+    try {
+      const data = await unlockEpilogue(pw.value);
+      a.epilogue = data; a.epilogueOpenedAt = nowISO(); saveNow(); fill(data); box.focus();
+    } catch (err) {
+      status.textContent = err && err.code === 'nocrypto' ? '這個瀏覽器無法解鎖，請改用 Chrome 或 Safari 開啟網址。' : '密碼不正確，請確認老師公布的密碼。';
+      status.hidden = false; btn.disabled = false; btn.textContent = '解鎖並閱讀後記';
+    }
+  });
+  box.append(intro, form);
   return box;
+}
+async function unlockEpilogue(password) {
+  if (!(window.crypto && crypto.subtle)) { const e = new Error('no crypto'); e.code = 'nocrypto'; throw e; }
+  const L = EPILOGUE_LOCKED;
+  const b64 = t => Uint8Array.from(atob(t), c => c.charCodeAt(0));
+  const norm = password.normalize('NFKC').toLowerCase().replace(/[\s\-_.,，、]+/g, '');
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(norm), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b64(L.salt), iterations: L.iter, hash: 'SHA-256' },
+    base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(L.iv) }, key, b64(L.ct));
+  return JSON.parse(new TextDecoder().decode(plain));
 }
 
 /* ---------- 畫面 11：摘要與匯出 ---------- */
@@ -1201,7 +1239,7 @@ function renderRecord(rec, a) {
       PHASES.map((t, i) => h('div', { class: 'card' }, h('h3', { class: 'cb-title' }, t),
         qa('行動', p.phases[i].action), qa('負責角色', p.phases[i].owner),
         qa('如何知道有進展', p.phases[i].signal), qa('什麼結果會讓我調整', p.phases[i].trigger)))),
-    EPILOGUE ? h('section', { class: 'rec-sec' }, h('h2', {}, '後記'), h('p', {}, a.epilogueOpenedAt ? `開啟時間：${fmt(a.epilogueOpenedAt)}` : '未開啟')) : null);
+    HAS_EPILOGUE ? h('section', { class: 'rec-sec' }, h('h2', {}, '後記'), h('p', {}, a.epilogueOpenedAt ? `開啟時間：${fmt(a.epilogueOpenedAt)}` : '未開啟')) : null);
 }
 function reflectionRecord(a) {
   return h('section', { class: 'rec-sec' }, h('h2', {}, '後記／討論後反思'),
@@ -1215,7 +1253,7 @@ function renderSummary() {
     h('p', { class: 'warn' }, '尚未交給老師：請下載 JSON 或 CSV，自行上傳到課程指定位置。本網頁不會自動傳送。'),
     renderRecord(state, a),
     h('section', { class: 'rec-sec no-print' }, h('h2', {}, '後記／討論後反思'),
-      h('p', { class: 'small' }, EPILOGUE ? '讀完後記或課堂討論後填寫。反思會另外記錄，不會改寫你已提交的決策。'
+      h('p', { class: 'small' }, HAS_EPILOGUE ? '讀完後記或課堂討論後填寫。反思會另外記錄，不會改寫你已提交的決策。'
         : '老師發下後記或課堂討論後填寫。反思會另外記錄，不會改寫你已提交的決策。'),
       textField({ obj: a.reflection, path: 'useful', label: '哪些機制可能有用？', onInput: touch }),
       textField({ obj: a.reflection, path: 'unproven', label: '仍有什麼不能證明？', onInput: touch }),
