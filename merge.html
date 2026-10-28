@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex, nofollow">
+<title>CareSync 作答彙整</title>
+<style>
+:root{
+  --navy:#183149; --navy-2:#24476a; --gold:#B59B62; --bg:#F7F5F0; --card:#ffffff;
+  --text:#1d2630; --muted:#4a5560; --line:#d9d3c5; --line-strong:#7d848c;
+  --note:#efe9dc; --danger:#9b1c1c; --danger-bg:#fdf1f1; --ok-bg:#eef3f7;
+}
+*{box-sizing:border-box}
+html{font-size:18px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);line-height:1.7;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Heiti TC","Noto Sans TC","Microsoft JhengHei",sans-serif;overflow-wrap:anywhere}
+.wrap{max-width:60rem;margin:0 auto;padding:1rem max(16px, env(safe-area-inset-right, 0px)) 3rem max(16px, env(safe-area-inset-left, 0px))}
+h1,h2{color:var(--navy);line-height:1.4}
+h1{font-size:1.5rem;margin:.5rem 0 .25rem}
+h1 .en{font-family:Georgia,"Times New Roman",serif}
+h2{font-size:1.15rem;margin:1.6rem 0 .5rem}
+p{margin:.4rem 0 .8rem}
+.small{font-size:.9rem;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;margin:1rem 0}
+.drop{border:2px dashed var(--line-strong);border-radius:12px;background:#fff;padding:1.5rem 1rem;text-align:center}
+.drop.over{border-color:var(--navy);background:var(--ok-bg)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:.45rem 1rem;border-radius:8px;font:inherit;font-size:1rem;
+  cursor:pointer;border:2px solid var(--navy);background:#fff;color:var(--navy)}
+.btn-primary{background:var(--navy);color:#fff}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn-row{display:flex;flex-wrap:wrap;gap:.6rem;margin:.8rem 0}
+:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+label.chk{display:flex;gap:.6rem;align-items:flex-start;min-height:44px;cursor:pointer}
+label.chk input{width:1.25rem;height:1.25rem;margin-top:.3rem;accent-color:var(--navy);flex:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:.6rem}
+.stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem}
+.stat b{display:block;font-size:1.5rem;color:var(--navy);font-variant-numeric:tabular-nums}
+.stat span{font-size:.85rem;color:var(--muted)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#fff}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{border-bottom:1px solid var(--line);padding:.4rem .6rem;text-align:left;vertical-align:top;white-space:nowrap}
+th{background:var(--note);color:var(--navy);position:sticky;top:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.msgs li{margin:.2rem 0}
+.warn{color:var(--danger)}
+.notice{background:var(--note);border-left:4px solid var(--gold);border-radius:6px;padding:.7rem 1rem}
+.manual{width:100%;min-height:10rem;font-size:.8rem}
+[hidden]{display:none !important}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1><span class="en">CareSync</span> 作答彙整</h1>
+  <p class="small">老師用：把學生交來的 CSV 或 JSON 檔一次拖進來，合併成一份可用 Excel 開啟的 CSV。檔案只在這台電腦的瀏覽器裡處理，不會上傳到任何地方。</p>
+
+  <div class="drop" id="drop">
+    <p><strong>把檔案拖到這裡</strong>，或</p>
+    <input type="file" id="fileInput" accept=".csv,.json,text/csv,application/json" multiple hidden>
+    <button type="button" class="btn btn-primary" id="pick">選擇檔案（可一次選多個）</button>
+    <p class="small">可混合 CSV 與 JSON；同一位學生交了兩種格式也沒關係，會自動去除重複。</p>
+  </div>
+
+  <div class="btn-row"><button type="button" class="btn" id="clear" disabled>清除已載入的檔案</button></div>
+
+  <section id="result" hidden>
+    <h2>彙整結果</h2>
+    <div class="stats" id="stats"></div>
+    <ul class="msgs small" id="msgs"></ul>
+
+    <div class="card">
+      <label class="chk"><input type="checkbox" id="onlyLatest" checked>
+        <span>每位作答者只保留一筆：已提交的最新一次嘗試（未提交的嘗試只在沒有已提交紀錄時保留）</span></label>
+      <label class="chk"><input type="checkbox" id="onlyDone">
+        <span>只保留已提交最終選擇的紀錄</span></label>
+      <div class="btn-row"><button type="button" class="btn btn-primary" id="download">下載合併後的 CSV</button></div>
+      <p class="small" id="dlNote"></p>
+    </div>
+
+    <h2>初選與最終選擇的分布</h2>
+    <p class="small">只統計選項次數，供課堂討論參考；不代表任何方案較好。</p>
+    <div class="tbl"><table id="dist"></table></div>
+
+    <h2>名單預覽</h2>
+    <div class="tbl"><table id="preview"></table></div>
+  </section>
+
+  <section id="manualBox" hidden>
+    <h2>下載沒有反應時</h2>
+    <p class="small">請全選下方內容，複製後貼到純文字編輯器，存成 .csv 檔。</p>
+    <textarea class="manual" id="manual" readonly aria-label="合併後的 CSV 內容"></textarea>
+  </section>
+</main>
+
+<script>
+/* 欄位定義：須與 index.html 的 CSV_COLUMNS 保持一致（JSON 檔依此轉成同樣的欄位）。 */
+const PHASES = ['前 30 天', '31～60 天', '61～90 天'];
+const OPTION_IDS = ['A', 'B', 'C', 'D', 'E'];
+function lbl(d) { return d ? d.label : null; }
+function choiceCols(pre, get, isFinal) {
+  const g = f => o => { const c = get(o); return c ? f(c) : null; };
+  const cols = [
+    [`${pre}_方案`, g(c => c.optionLabel)], [`${pre}_組合納入`, g(c => c.combinedOptions ? c.combinedOptions.join('、') : null)],
+    [`${pre}_組合說明`, g(c => c.combinationNote)], [`${pre}_理由`, g(c => c.reason)], [`${pre}_個案依據`, g(c => c.evidence)],
+    [`${pre}_${isFinal ? '最大代價' : '最擔心代價'}`, g(c => c.risk)]];
+  if (isFinal) cols.push([`${pre}_相較初選`, g(c => c.changeFromInitial)]);
+  cols.push([`${pre}_保存時間`, g(c => c.savedAt)]);
+  return cols;
+}
+const CSV_COLUMNS = [
+  ['版本', o => o.version], ['版別', o => o.edition], ['活動代碼', o => o.activityCode],
+  ['課程班級代碼', o => o.classCode], ['作答代碼', o => o.respondentCode], ['作答身分', o => o.respondentType === 'group' ? '組別' : '個人'],
+  ['attemptId', o => o.attemptId], ['嘗試次數', o => o.attemptNumber], ['開始時間', o => o.startedAt], ['完成時間', o => o.completedAt],
+  ...choiceCols('初選', o => o.initialChoice, false),
+  ['分析_最重要問題與依據', o => o.analysis.keyIssueAndEvidence], ['分析_其他解釋與缺少資訊', o => o.analysis.alternativeAndMissingInfo],
+  ['工具安排', o => lbl(o.implementationPlan.tools.decision)], ['工具_補充與理由', o => o.implementationPlan.tools.note],
+  ['跌倒偵測安排', o => lbl(o.implementationPlan.fallDetectionPilot.decision)], ['跌倒偵測_啟動前條件', o => o.implementationPlan.fallDetectionPilot.preconditions],
+  ['整合領導', o => lbl(o.implementationPlan.leadership.decision)], ['領導_權限資源與報告', o => o.implementationPlan.leadership.authorityResourcesReporting],
+  ['溝通_John', o => o.implementationPlan.communication.john], ['溝通_加州團隊', o => o.implementationPlan.communication.californiaTeam],
+  ['溝通_董事會', o => o.implementationPlan.communication.board],
+  ...PHASES.flatMap((t, i) => [
+    [`${t}_行動`, o => o.implementationPlan.phases[i].action], [`${t}_負責角色`, o => o.implementationPlan.phases[i].ownerRole],
+    [`${t}_進展指標`, o => o.implementationPlan.phases[i].progressSignal], [`${t}_調整條件`, o => o.implementationPlan.phases[i].adjustTrigger]]),
+  ['計畫最後更新', o => o.implementationPlan.updatedAt],
+  ...choiceCols('最終', o => o.finalChoice, true),
+  ['後記開啟時間', o => o.epilogueOpenedAt],
+  ['反思_可能有用的機制', o => o.reflection.usefulMechanisms], ['反思_仍不能證明', o => o.reflection.stillUnproven],
+  ['反思_下次整合', o => o.reflection.nextIntegration], ['反思保存時間', o => o.reflection.savedAt],
+  ['匯出時間', o => o.exportedAt]
+];
+const BASE_HEADERS = CSV_COLUMNS.map(c => c[0]);
+
+/* ---------- 工具 ---------- */
+const $ = s => document.querySelector(s);
+function el(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) { if (v != null) e.setAttribute(k, v); }
+  kids.flat().forEach(k => { if (k != null) e.append(k instanceof Node ? k : String(k)); });
+  return e;
+}
+/* RFC 4180 CSV 解析：支援引號、逗號與欄位內換行 */
+function parseCSV(text) {
+  text = text.replace(/^﻿/, '');
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; }
+      else f += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(f); f = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(f); f = ''; if (row.some(x => x !== '')) rows.push(row); row = [];
+    } else f += c;
+  }
+  row.push(f); if (row.some(x => x !== '')) rows.push(row);
+  return rows;
+}
+function csvCell(v) {
+  let s = v == null ? '' : String(v);
+  s = s.replace(/\r\n?/g, '\n');
+  if (/^[=+\-@\u0000-\u001f\u007f]/.test(s)) s = "'" + s;
+  return '"' + s.replace(/"/g, '""') + '"';
+}
+const keyOf = r => `${r['課程班級代碼'] || ''}\u0000${r['作答代碼'] || ''}`;
+
+/* ---------- 載入 ---------- */
+let records = new Map();   // attemptId → row object
+let files = 0, messages = [];
+
+async function addFiles(list) {
+  for (const file of list) {
+    files++;
+    let text;
+    try { text = await file.text(); } catch (e) { messages.push([`${file.name}：無法讀取`, true]); continue; }
+    try {
+      const rows = /\.json$/i.test(file.name) || /^\s*[\[{]/.test(text.replace(/^﻿/, '')) ? fromJSON(text) : fromCSV(text);
+      if (!rows.length) { messages.push([`${file.name}：沒有找到作答資料`, true]); continue; }
+      let dup = 0;
+      rows.forEach(r => {
+        const id = r.attemptId || `${file.name}#${Math.random()}`;
+        const prev = records.get(id);
+        if (prev) { dup++; if ((r['匯出時間'] || '') < (prev['匯出時間'] || '')) return; }
+        records.set(id, r);
+      });
+      messages.push([`${file.name}：${rows.length} 筆${dup ? `（其中 ${dup} 筆與先前檔案重複，保留較新的匯出）` : ''}`, false]);
+    } catch (e) {
+      messages.push([`${file.name}：不是 CareSync 作答檔（${e.message}）`, true]);
+    }
+  }
+  render();
+}
+function fromCSV(text) {
+  const rows = parseCSV(text);
+  if (!rows.length) return [];
+  const head = rows[0].map(x => x.trim());
+  if (!head.includes('attemptId') || !head.includes('作答代碼')) throw new Error('缺少 attemptId 或作答代碼欄位');
+  return rows.slice(1).map(r => Object.fromEntries(head.map((hd, i) => [hd, r[i] ?? ''])));
+}
+function fromJSON(text) {
+  const data = JSON.parse(text.replace(/^﻿/, ''));
+  const list = Array.isArray(data) ? data : [data];
+  return list.map(o => {
+    if (!o || !o.attemptId || !o.implementationPlan) throw new Error('JSON 格式不符');
+    const r = {};
+    CSV_COLUMNS.forEach(([name, get]) => { let v; try { v = get(o); } catch (e) { v = null; } r[name] = v == null ? '' : String(v); });
+    r.__fromJSON = true;
+    return r;
+  });
+}
+
+/* ---------- 篩選與輸出 ---------- */
+function selected() {
+  let rows = [...records.values()];
+  if ($('#onlyDone').checked) rows = rows.filter(r => r['最終_方案']);
+  if ($('#onlyLatest').checked) {
+    const best = new Map();
+    rows.forEach(r => {
+      const k = keyOf(r), b = best.get(k);
+      const score = x => [x['最終_方案'] ? 1 : 0, Number(x['嘗試次數']) || 0, x['匯出時間'] || ''];
+      if (!b) { best.set(k, r); return; }
+      const [a1, a2, a3] = score(r), [b1, b2, b3] = score(b);
+      if (a1 > b1 || (a1 === b1 && (a2 > b2 || (a2 === b2 && a3 > b3)))) best.set(k, r);
+    });
+    rows = [...best.values()];
+  }
+  return rows.sort((x, y) => (x['課程班級代碼'] || '').localeCompare(y['課程班級代碼'] || '', 'zh-Hant')
+    || (x['作答代碼'] || '').localeCompare(y['作答代碼'] || '', 'zh-Hant', { numeric: true })
+    || (Number(x['嘗試次數']) || 0) - (Number(y['嘗試次數']) || 0));
+}
+function headers(rows) {
+  const extra = [];
+  rows.forEach(r => Object.keys(r).forEach(k => { if (k !== '__fromJSON' && !BASE_HEADERS.includes(k) && !extra.includes(k)) extra.push(k); }));
+  return BASE_HEADERS.concat(extra);
+}
+function buildCSV(rows) {
+  const hs = headers(rows);
+  // 學生檔裡已防護的內容以 ' 開頭，再套一次 csvCell 不會重複加上
+  return '﻿' + [hs.map(csvCell).join(',')].concat(rows.map(r => hs.map(hd => csvCell(r[hd] ?? '')).join(','))).join('\r\n') + '\r\n';
+}
+function optId(label) { const m = /^([A-E])｜/.exec(label || ''); return m ? m[1] : ''; }
+
+function render() {
+  const all = [...records.values()];
+  $('#result').hidden = !all.length && !messages.length;
+  $('#clear').disabled = !files;
+  const rows = selected();
+  const people = new Set(all.map(keyOf)).size;
+  const done = all.filter(r => r['最終_方案']).length;
+  const stats = $('#stats'); stats.textContent = '';
+  [[files, '已載入檔案'], [all.length, '作答紀錄（已去重）'], [people, '作答者'], [done, '已提交最終選擇'], [rows.length, '將匯出的列數']]
+    .forEach(([n, t]) => stats.append(el('div', { class: 'stat' }, el('b', {}, n), el('span', {}, t))));
+  const msgs = $('#msgs'); msgs.textContent = '';
+  messages.filter(x => x[1]).forEach(([m]) => msgs.append(el('li', { class: 'warn' }, m)));
+  const okList = messages.filter(x => !x[1]);
+  if (okList.length) msgs.append(el('li', {}, el('details', {}, el('summary', {}, `已讀取的檔案明細（${okList.length} 個）`),
+    el('ul', {}, okList.map(([m]) => el('li', {}, m))))));
+  const notDone = [...new Set(all.map(keyOf))].filter(k => !all.some(r => keyOf(r) === k && r['最終_方案']));
+  if (notDone.length) msgs.append(el('li', { class: 'warn' }, `尚未提交最終選擇：${notDone.map(k => k.split('\u0000').join(' / ')).join('、')}`));
+
+  const dist = $('#dist'); dist.textContent = '';
+  dist.append(el('thead', {}, el('tr', {}, el('th', {}, '方案'), el('th', { class: 'num' }, '初選'), el('th', { class: 'num' }, '最終選擇'), el('th', { class: 'num' }, '最終納入（含 E 的組合）'))));
+  const tb = el('tbody');
+  OPTION_IDS.forEach(id => {
+    const ini = rows.filter(r => optId(r['初選_方案']) === id).length;
+    const fin = rows.filter(r => optId(r['最終_方案']) === id).length;
+    const inc = id === 'E' ? '' : rows.filter(r => optId(r['最終_方案']) === id || (optId(r['最終_方案']) === 'E' && (r['最終_組合納入'] || '').includes(id))).length;
+    const label = (rows.map(r => r['初選_方案']).concat(rows.map(r => r['最終_方案'])).find(x => optId(x) === id)) || id;
+    tb.append(el('tr', {}, el('td', {}, label), el('td', { class: 'num' }, ini), el('td', { class: 'num' }, fin), el('td', { class: 'num' }, inc)));
+  });
+  const changed = rows.filter(r => r['初選_方案'] && r['最終_方案'] && r['初選_方案'] !== r['最終_方案']).length;
+  tb.append(el('tr', {}, el('td', {}, '初選與最終不同'), el('td', { class: 'num' }, ''), el('td', { class: 'num' }, changed), el('td', {}, '')));
+  dist.append(tb);
+
+  const pv = $('#preview'); pv.textContent = '';
+  const cols = ['課程班級代碼', '作答代碼', '作答身分', '嘗試次數', '初選_方案', '最終_方案', '完成時間', '後記開啟時間'];
+  pv.append(el('thead', {}, el('tr', {}, cols.map(c => el('th', {}, c.replace('_方案', ''))))));
+  const pb = el('tbody');
+  rows.forEach(r => pb.append(el('tr', {}, cols.map(c => el('td', {}, /時間$/.test(c) && r[c] ? fmt(r[c]) : (r[c] || '—'))))));
+  pv.append(pb);
+  $('#download').disabled = !rows.length;
+}
+function fmt(iso) { const d = new Date(iso); return isNaN(d) ? iso : d.toLocaleString('zh-TW', { hour12: false }); }
+
+$('#download').addEventListener('click', () => {
+  const rows = selected();
+  const csv = buildCSV(rows);
+  const d = new Date(), p = n => String(n).padStart(2, '0');
+  const name = `CareSync_merged_${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${rows.length}rows.csv`;
+  try {
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const a = el('a', { href: url, download: name }); a.hidden = true;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    $('#dlNote').textContent = `已產生 ${name}（${rows.length} 筆）。用 Excel 開啟即可；長文字欄可設定「自動換行」方便閱讀。`;
+  } catch (e) { /* 改用手動複製 */ }
+  $('#manual').value = csv.replace(/^﻿/, '');
+  $('#manualBox').hidden = false;
+});
+$('#onlyLatest').addEventListener('change', render);
+$('#onlyDone').addEventListener('change', render);
+$('#clear').addEventListener('click', () => { records = new Map(); files = 0; messages = []; $('#manualBox').hidden = true; $('#dlNote').textContent = ''; render(); $('#result').hidden = true; });
+$('#pick').addEventListener('click', () => $('#fileInput').click());
+$('#fileInput').addEventListener('change', e => { addFiles([...e.target.files]); e.target.value = ''; });
+const drop = $('#drop');
+['dragenter', 'dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => addFiles([...e.dataTransfer.files]));
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => e.preventDefault());
+</script>
+</body>
+</html>
