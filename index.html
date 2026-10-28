@@ -1,0 +1,1547 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex, nofollow">
+<title>CareSync 整合抉擇</title>
+<style>
+:root{
+  --navy:#183149; --navy-2:#24476a; --gold:#B59B62; --bg:#F7F5F0; --card:#ffffff;
+  --text:#1d2630; --muted:#4a5560; --line:#d9d3c5; --line-strong:#7d848c;
+  --note:#efe9dc; --danger:#9b1c1c; --danger-bg:#fdf1f1; --ok-bg:#eef3f7;
+  --fs:18px;
+}
+*{box-sizing:border-box}
+html{font-size:var(--fs);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);line-height:1.7;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Heiti TC","Noto Sans TC","Noto Sans CJK TC","Microsoft JhengHei","Microsoft JhengHei UI",sans-serif;
+  overflow-wrap:anywhere}
+.wrap{max-width:46rem;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+h1,h2,h3{color:var(--navy);line-height:1.4}
+h1{font-size:1.55rem;margin:.25rem 0 1rem}
+h2{font-size:1.25rem;margin:1.75rem 0 .5rem}
+h3{font-size:1.05rem;margin:1rem 0 .25rem}
+p{margin:.5rem 0 .9rem}
+.en{font-family:Georgia,"Times New Roman",serif}
+:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+.btn:focus-visible{outline-offset:3px}
+[hidden]{display:none !important}
+
+/* header */
+header.app{background:var(--bg);border-bottom:1px solid var(--line)}
+@media (min-height:560px){header.app{position:sticky;top:env(safe-area-inset-top, 0px);z-index:10}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--bg)}}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.25rem .5rem;padding-top:.35rem;padding-bottom:.35rem}
+.brand{display:flex;align-items:baseline;gap:.4rem;flex-wrap:wrap}
+.brand-en{font-family:Georgia,"Times New Roman",serif;font-weight:700;color:var(--navy);font-size:1.15rem}
+.brand-zh{color:var(--muted);font-size:.85rem}
+.tools{display:flex;gap:.4rem}
+.progress{padding-bottom:.4rem;font-size:.85rem;color:var(--muted)}
+.pbar{height:4px;background:var(--line);border-radius:2px;margin-top:.25rem;overflow:hidden}
+.pbar > span{display:block;height:100%;background:var(--gold)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;min-height:44px;min-width:44px;
+  padding:.45rem 1rem;border-radius:8px;font:inherit;font-size:1rem;line-height:1.3;cursor:pointer;text-decoration:none;
+  border:2px solid var(--navy);background:#fff;color:var(--navy)}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{background:var(--navy-2)}
+.btn-ghost{border-color:var(--line-strong);font-size:.9rem;padding:.35rem .75rem}
+.btn-danger{border-color:var(--danger);color:var(--danger)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn-row{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+.linkish{background:none;border:none;color:var(--navy);text-decoration:underline;font:inherit;font-size:.95rem;min-height:44px;padding:0 .25rem;cursor:pointer}
+
+/* layout pieces */
+main{padding-bottom:3rem}
+.kicker{margin:1.25rem 0 0;color:var(--muted);font-size:.9rem;letter-spacing:.02em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;margin:1rem 0}
+.callout{background:var(--note);border-left:4px solid var(--gold);border-radius:6px;padding:.8rem 1rem;margin:1rem 0}
+.callout > :first-child{margin-top:0}
+.callout > :last-child{margin-bottom:0}
+.task{font-size:1.15rem;color:var(--navy);font-weight:600}
+.small{font-size:.9rem;color:var(--muted)}
+.source-note{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:.75rem;margin-top:2rem}
+ul,ol{padding-left:1.4rem;margin:.4rem 0 .9rem}
+li{margin:.25rem 0}
+.letter{border-top:4px solid var(--gold)}
+.letter-meta{color:var(--muted);font-size:.9rem;margin-top:0}
+.reveal-item{border-left:4px solid var(--gold)}
+.reveal-item h2{margin-top:0;font-size:1.1rem}
+.event h2{margin-top:0;font-size:1.1rem}
+
+/* metrics */
+.metrics{display:grid;grid-template-columns:1fr;gap:.75rem;margin:.75rem 0}
+@media (min-width:600px){.metrics{grid-template-columns:1fr 1fr}}
+.metric{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.8rem 1rem}
+.metric h3{margin:0 0 .4rem;font-size:1rem}
+.metric dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.15rem .75rem;align-items:baseline}
+.metric dt{color:var(--muted);font-size:.9rem}
+.metric dd{margin:0;font-size:1.35rem;font-weight:700;color:var(--navy)}
+.metric dd small{font-size:.85rem;font-weight:400;color:var(--muted)}
+
+/* proposals */
+.proposal{background:#fff;border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:10px;padding:1rem 1.1rem;margin:1rem 0}
+.proposal-head{display:flex;gap:.75rem;align-items:flex-start}
+.badge{display:inline-flex;align-items:center;justify-content:center;flex:none;width:2.2rem;height:2.2rem;border-radius:50%;
+  background:var(--navy);color:#fff;font-family:Georgia,"Times New Roman",serif;font-weight:700}
+.proposal h2{margin:0;font-size:1.15rem}
+.proposal h3{font-size:.95rem;color:var(--muted);margin:.8rem 0 .2rem}
+
+/* forms */
+.field{margin:1.1rem 0}
+.field label,.field .label{display:block;font-weight:600;color:var(--navy)}
+.req{font-weight:400;color:var(--danger);font-size:.85rem;margin-left:.25rem}
+.opt{font-weight:400;color:var(--muted);font-size:.85rem;margin-left:.25rem}
+.hint{font-size:.9rem;color:var(--muted);margin:.15rem 0 .4rem}
+input[type=text],textarea{width:100%;font:inherit;font-size:1rem;line-height:1.6;color:var(--text);background:#fff;
+  border:1px solid var(--line-strong);border-radius:8px;padding:.55rem .7rem}
+input[type=text]{min-height:44px}
+textarea{min-height:6.5rem;resize:vertical}
+input[readonly],textarea[readonly]{background:#f2efe8}
+.meta{display:flex;justify-content:flex-end;font-size:.85rem;color:var(--muted)}
+.err{color:var(--danger);font-size:.95rem;margin:.25rem 0 0;font-weight:600}
+[aria-invalid=true]{border-color:var(--danger);border-width:2px}
+fieldset{border:none;margin:1.1rem 0;padding:0;min-width:0}
+legend{font-weight:600;color:var(--navy);padding:0;margin-bottom:.25rem}
+.choice{display:flex;gap:.7rem;align-items:flex-start;padding:.6rem .9rem;border:1px solid var(--line);border-radius:10px;background:#fff;
+  min-height:44px;cursor:pointer;margin:.5rem 0}
+.choice input{width:1.3rem;height:1.3rem;margin:.25rem 0 0;flex:none;accent-color:var(--navy)}
+.choice-text{display:flex;flex-direction:column}
+.choice-desc{font-size:.9rem;color:var(--muted)}
+.choice.is-selected{border:2px solid var(--navy);box-shadow:inset 5px 0 0 var(--gold)}
+.sel-tag{display:none;font-size:.8rem;color:var(--navy);font-weight:700}
+.choice.is-selected .sel-tag{display:inline}
+.choice.is-locked{cursor:default}
+.form-summary{background:var(--danger-bg);border:1px solid var(--danger);color:var(--danger);border-radius:8px;padding:.6rem .9rem;font-weight:600}
+.phase{border-top:4px solid var(--gold)}
+.phase h2{margin-top:0;font-size:1.1rem}
+.locked-note{background:var(--ok-bg);border-radius:8px;padding:.6rem .9rem;font-size:.95rem}
+
+/* nav */
+.step-nav{margin-top:2rem}
+.nav-buttons{display:flex;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+
+/* record */
+.compare{display:grid;grid-template-columns:1fr;gap:1rem}
+@media (min-width:760px){.compare{grid-template-columns:1fr 1fr}}
+.choice-block{margin:0}
+.cb-title{margin-top:0}
+.cb-opt{font-weight:700;color:var(--navy);font-size:1.05rem}
+.qa h3{font-size:.95rem;color:var(--muted);margin:.8rem 0 .1rem}
+.answer{white-space:pre-wrap;margin:0}
+.answer.empty{color:var(--muted)}
+.meta-time{font-size:.85rem;color:var(--muted);margin:.8rem 0 0}
+.rec-sec{margin-top:1.5rem}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:.2rem 1rem;margin:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+details.cons{background:#fff;border:1px solid var(--line);border-radius:10px;margin:.75rem 0;padding:0 1rem}
+details.cons > summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:.6rem;font-weight:600;color:var(--navy);padding:.5rem 0;flex-wrap:wrap}
+details.cons[open] > summary{border-bottom:1px solid var(--line)}
+.tag{display:inline-block;font-size:.8rem;font-weight:600;border:1px solid var(--navy);color:var(--navy);border-radius:999px;padding:0 .6rem;background:#fff}
+.notice{border:2px solid var(--navy);background:#fff;border-radius:10px;padding:.8rem 1rem;font-weight:600;color:var(--navy)}
+
+/* banner & toast */
+#banner{margin-top:.5rem}
+.warn{background:var(--danger-bg);border:1px solid var(--danger);color:var(--danger);border-radius:8px;padding:.6rem .9rem;font-weight:600}
+#toast{position:fixed;left:50%;transform:translateX(-50%);top:.5rem;pointer-events:none;max-width:calc(100vw - 32px);background:var(--navy);color:#fff;
+  padding:.6rem 1rem;border-radius:8px;z-index:50;font-size:.95rem;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+#toast:empty{display:none}
+
+/* dialogs */
+dialog{width:min(44rem,calc(100vw - 1rem));max-height:calc(100vh - 1rem);max-height:calc(100dvh - 1rem);padding:0;border:none;border-radius:12px;
+  background:var(--bg);color:var(--text);overflow:auto}
+dialog::backdrop{background:rgba(10,20,30,.55)}
+.dlg-head{position:sticky;top:0;z-index:1;background:#fff;display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.4rem 1rem;border-bottom:1px solid var(--line)}
+.dlg-head h2{margin:0;font-size:1.15rem}
+.dlg-body{padding:.5rem 1rem 1.5rem}
+.toc{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.toc a{display:inline-flex;align-items:center;min-height:44px;padding:0 .6rem;color:var(--navy);border:1px solid var(--line);border-radius:8px;background:#fff;font-size:.9rem}
+.steplist{list-style:none;padding:0;margin:.5rem 0}
+.steplist li{margin:.3rem 0}
+.steplist .btn{width:100%;justify-content:flex-start;text-align:left;font-size:.95rem}
+.steplist .btn[aria-current=step]{background:var(--navy);color:#fff}
+.timeline{list-style:none;padding:0;margin:.5rem 0}
+.timeline li{border-left:3px solid var(--gold);padding:.1rem 0 .6rem .9rem;margin:0}
+.timeline b{color:var(--navy);display:block}
+table.simple{width:100%;border-collapse:collapse;background:#fff;font-size:.95rem}
+table.simple th,table.simple td{border:1px solid var(--line);padding:.45rem .6rem;text-align:left;vertical-align:top}
+table.simple th{background:var(--note);color:var(--navy)}
+.manual-ta{min-height:14rem;font-size:.85rem}
+#askDlg{width:min(30rem,calc(100vw - 2rem))}
+.ask-body{padding:1.2rem 1.2rem .6rem}
+.ask-body p{font-size:1.05rem;margin-top:0}
+.quote{margin:1rem 0;padding:.7rem 1rem;background:#fff;border-left:4px solid var(--navy);border-radius:0 8px 8px 0}
+.quote blockquote{margin:0}
+.quote p{margin:.3rem 0}
+.quote figcaption{font-size:.9rem;color:var(--muted);text-align:right}
+.blk-h{font-size:1rem;margin-top:1.2rem}
+h4{color:var(--navy);font-size:1.05rem;margin:1.4rem 0 .3rem}
+.items li{margin:.4rem 0}
+.ex-title{font-size:1.1rem;margin-top:1.6rem;border-bottom:2px solid var(--gold);padding-bottom:.2rem}
+.tcards{display:grid;grid-template-columns:1fr;gap:.6rem;margin:.6rem 0}
+@media (min-width:600px){.tcards{grid-template-columns:1fr 1fr}}
+.tcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.6rem .9rem}
+.tcard-title{font-weight:700;color:var(--navy);margin:0 0 .3rem}
+.tcard dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.1rem .8rem}
+.tcard dt{color:var(--muted);font-size:.9rem}
+.tcard dd{margin:0}
+#folderBody section{scroll-margin-top:4.5rem}
+
+#print-area{display:none}
+@media print{
+  :root{--fs:12pt}
+  body{background:#fff}
+  header.app,#main,#banner,#toast,dialog,.no-print{display:none !important}
+  #print-area{display:block !important;padding:0}
+  .card,.proposal,details.cons{border-color:#999;break-inside:auto}
+  .answer{break-inside:auto}
+  h1,h2,h3{break-after:avoid}
+  .compare{display:block}
+  .compare > *{margin-bottom:1rem}
+}
+</style>
+</head>
+<body>
+<header class="app no-print">
+  <div class="bar wrap">
+    <div class="brand"><span class="brand-en">CareSync</span><span class="brand-zh">整合抉擇</span></div>
+    <div class="tools">
+      <button type="button" class="btn btn-ghost" id="btnFolder" aria-haspopup="dialog">資料夾</button>
+      <button type="button" class="btn btn-ghost" id="btnMenu" aria-haspopup="dialog">目錄與設定</button>
+    </div>
+  </div>
+  <div class="wrap progress" id="progress"></div>
+</header>
+<div id="banner" class="wrap no-print"></div>
+<main id="main" class="wrap"></main>
+<div id="print-area" class="wrap"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="folderDlg" aria-labelledby="folderTitle">
+  <div class="dlg-head"><h2 id="folderTitle">資料夾</h2><button type="button" class="btn btn-ghost" data-close>關閉</button></div>
+  <div class="dlg-body" id="folderBody"></div>
+</dialog>
+<dialog id="menuDlg" aria-labelledby="menuTitle">
+  <div class="dlg-head"><h2 id="menuTitle">目錄與設定</h2><button type="button" class="btn btn-ghost" data-close>關閉</button></div>
+  <div class="dlg-body" id="menuBody"></div>
+</dialog>
+<dialog id="askDlg" aria-labelledby="askMsg">
+  <div class="dlg-body ask-body"><p id="askMsg"></p>
+    <div class="btn-row"><button type="button" class="btn btn-primary" id="askOk">確定</button><button type="button" class="btn" id="askCancel">取消</button></div></div>
+</dialog>
+<dialog id="textDlg" aria-labelledby="textTitle">
+  <div class="dlg-head"><h2 id="textTitle">手動複製</h2><button type="button" class="btn btn-ghost" data-close>關閉</button></div>
+  <div class="dlg-body" id="textBody"></div>
+</dialog>
+
+<script>
+/* =====================================================================
+   一、設定與教材資料（老師可修改此區；渲染邏輯在下方）
+   ===================================================================== */
+const CONFIG = {
+  activityId: 'CARESYNC-INTEGRATION',   // 活動代碼（用於保存鍵與下載檔名）
+  version: '1.1.0',                     // 活動版本；修改教材結構時請調升，避免與舊草稿混用
+  edition: 'classroom',                 // classroom＝課堂版（不含後記）；selfstudy＝自學版
+  storagePrefix: 'caresync',
+  maxChars: 2000,                       // 長欄字數上限
+  maxCodeChars: 40
+};
+
+/* 課堂版不含後記。自學版由老師另行產生，在此填入後記物件。 */
+const EPILOGUE = null; /*EPILOGUE_SLOT*/
+
+/* 教材內容依《CareSync 個案》學生版繁體中文 v2.5（2026-10-20）。
+   段落可用：字串（一般段落）、{h:'小標'}、{quote:'引文', src:'出處'}、{ul:[...]}、
+   {items:[['粗體開頭','說明'], ...]}、{table:'附表代號'}、{note:'註'}。 */
+const CONTENT = {
+  title: '來自加州的一封信：CareSync 的整合抉擇',
+  sourceNote: '內容依《CareSync 個案》學生版（v2.5）整理；「」內為個案原文引述。公司及人名均採化名。畫面、欄位與匯出流程屬教學設計，不是公司實際事件。',
+  start: {
+    task: '「你是 Ken。星期一上午 9 點之前，你必須決定哪些工作繼續、哪些暫停，以及由誰作主。」',
+    role: '你扮演 CareSync 創辦人兼執行長 Ken 博士。請閱讀個案證據，提出決策並寫下理由，最後比較自己前後的選擇。',
+    notes: [
+      '這個個案沒有標準答案。本網頁不評分、不排名，也不會告訴你哪個方案最好。',
+      '作答只保存在這台裝置的瀏覽器裡。換裝置、換瀏覽器、無痕模式或清除瀏覽資料，都可能遺失草稿。',
+      '完成後請下載作答檔，自行上傳到老師指定的課程平台。本網頁不會自動傳出任何資料。',
+      '可用學號、座號或組別代碼代替姓名；請勿填寫電話、電子郵件等個資。'
+    ],
+    reading: '閱讀時請區分「文中描述的現象」、「人物對現象的解釋」與「你自己的推論」；資料不足的地方可以註記，不必自行補成事實。',
+    flow: '流程：讀情境 → 初選與理由 → 證據分析 → 權責與行動計畫 → 最終決策 → 可能代價與追問 → 匯出'
+  },
+  anonymity: '本個案供課堂討論，公司及人名均採化名。內容依訪談與書面材料改寫；為教學討論需要，部分情節、日期與數據經整理或改寫，部分對話經重構，並非公司原始紀錄的逐項重現。中文引言為英文內容的翻譯。',
+
+  letter: {
+    meta: '2024 年 6 月・星期五晚上・台北',
+    blocks: [
+      '2024 年 6 月的一個星期五晚上，CareSync 創辦人兼執行長 Ken 博士獨坐台北辦公室，讀著 John Lewis 的辭職信。John 是加州 Elderlyon 公司的資深軟體工程師。六個月前，CareSync 收購了這家公司；John 已在 Elderlyon 工作十年，其旗艦產品 CareBridge 照護管理系統有很大一部分出自他手。照護機構每天都靠這套系統處理工作。',
+      'John 在信中寫道：',
+      { quote: '強調快速迭代（Rapid Iteration）與每週衝刺（Weekly Sprints），或許適合台灣市場，但這與我們在這裡建立的、按部就班且安全優先的開發文化根本衝突。客戶信任我們，是因為我們從不急著把關鍵醫療照護系統推上市場。[……] 我已看到同事在最近的整合會議中猶豫是否提出對時程的疑慮，因為他們知道，質疑速度可能被視為抗拒改變。當團隊成員開始對病人安全系統的專業判斷自我審查時，我們就已失去某種根本的東西，而我無法成為這種轉變的一部分。' },
+      'John 也在信中提到「聲音難以被聽見」、「在地化需求被忽略」與「專業價值不受尊重」。他提出四週的離職預告。Ken 知道，John 是少數完全了解 CareBridge 舊有系統架構的工程師之一；其他員工也在觀察公司會如何回應。',
+      '客戶成功長（Chief Customer Success Officer, CSO）Jennifer 已主動表示願意赴美協助整合，但 Ken 還沒有決定是否讓她接下這項任務。他已排定星期一上午 9 點與領導團隊開會。在那之前，他得想清楚：哪些事必須改變，哪些應繼續推進，又該把決策權交給誰。'
+    ],
+    mondayTitle: '星期一，Ken 必須回應',
+    monday: ['John', '加州團隊', '董事會']
+  },
+
+  companies: [
+    { title: '① CareSync：把台灣經驗帶向海外', blocks: [
+      'Ken 博士曾在史丹佛接受醫療創新研究訓練，2018 年在台灣創辦 CareSync，將軟體與人工智慧（Artificial Intelligence, AI）工具帶入長期照護（Long-Term Care, LTC）。產品包括照護機構電子健康紀錄（Electronic Health Records, EHR）、遠距醫療平台（Telemedicine Platform）、連網生理數據監測及人工智慧跌倒偵測（附表 1）。依公司說法，至 2023 年，CareSync 約占台灣高齡照護軟體市場的 30%，取得 700 萬美元 A 輪融資，並與全球長照軟體供應商 CareLink Solution 建立策略合作。',
+      'Ken 將公司的工作方式稱為「CareSync Way」：短週期發布產品、公開討論想法、扁平溝通，以及透過團隊合作解決問題。在他看來，這些作法支持了 CareSync 的成長，也應成為海外團隊的工作方式。',
+      'Jennifer 是 2018 年創業時就加入 CareSync 的員工，現任客戶成功長。她曾推動客戶成功轉型及內部訓練，也自行研讀組織心理與變革管理。她的正式權限主要在客戶端，不包括工程、人資或設施管理。'
+    ] },
+    { title: '② Agingly：先前的一次整合', blocks: [
+      '在收購 Elderlyon 之前，CareSync 已有一次整合經驗。約在 Elderlyon 交易前一年半，CareSync 與南台灣一家較小的高齡照護科技公司 Agingly 完成交易，準備將 Agingly 的病人生理監測演算法併入 CareSync 平台。',
+      '整合後，平台曾發生系統當機，工程團隊花力氣處理相容性問題；部分客戶及員工也離開。兩家公司都在台灣，工作方式的差異較小。Ken 對這次經驗的理解是：最難的部分在技術，只要工程團隊把系統整合好，其他工作就能跟上。'
+    ] },
+    { title: '③ 為何選擇 Elderlyon', blocks: [
+      'CareSync 若自行進入美國市場，得從頭建立銷售管道、法規專業及客戶關係。收購既有公司，則能同時取得產品、客戶與當地團隊。這筆交易的目標不只有保住既有收入，也包括統一交付工具、交叉銷售跌倒偵測、整合技術平台，以及擴大國際收入（附表 2）。',
+      '2023 年初，CareSync 在篩選美國標的後選中 Elderlyon。雙方談判與盡職調查（Due Diligence）持續了大半年。法務、財務與技術團隊檢視公司的各項條件；Jennifer 也參與其中，重點是客戶服務能否延續及使用者經驗。但沒有人被正式要求評估兩個組織日常如何工作。',
+      'Agingly 的經驗讓 Ken 對這次整合抱持信心。他預期，主要挑戰仍會是技術問題。2023 年 12 月 24 日，交易完成。'
+    ] },
+    { title: '④ 長照市場：成長機會與客戶要求', blocks: [
+      '人口老化增加了長照服務與科技的需求。根據聯合國 2019 年的資料，當時全球約每十一人就有一人年滿 65 歲；到 2050 年，這個比例預計將升至約每六人一人（United Nations, 2019）。附表 3 列出人口、長照人力與支出的背景資料。',
+      '不過，進入美國不只是把產品換成英文。Elderlyon 的客戶是中小型照護機構，必須處理受美國隱私法規保護的健康資訊，也須接受州政府查核。軟體故障可能延誤用藥紀錄或事件通報；跌倒警報誤報或漏報，則可能影響住民安全。',
+      'Elderlyon 的收入主要來自照護機構的多年期合約，客戶重視系統可靠與合規。許多合約將在 2024 年底前到期續約。CareSync 能否保住這些客戶，與整合成效密切相關（附表 7）。'
+    ] },
+    { title: '⑤ Elderlyon 的企業特色與收購後的安排', blocks: [
+      'Elderlyon 於 2010 年代初成立於加州，在美國西岸長照市場穩定成長。其旗艦產品 CareBridge 以可靠、容易操作受到客戶重視。公司有 42 名員工，許多人已任職超過十年，平均年齡也高於 CareSync。',
+      'Elderlyon 的決策方式審慎，重視共識。許多跨部門協調靠日常交談，而非書面流程。工程師與客戶維持長期關係，有些客戶甚至留有支援工程師的私人電話，遇到問題便直接聯絡。這些關係也是公司服務客戶的一部分。',
+      '另一方面，Elderlyon 的系統架構逐漸跟不上雲端、連網裝置與人工智慧技術。領導團隊希望透過交易取得技術與資金，同時維持既有客戶關係。',
+      '交易完成後，Elderlyon 更名為 CareSync U.S.，成為 CareSync 的美國單位。大多數主管與員工留任，原領導團隊繼續管理日常營運。台北總部派出三名主管，分別推動系統整合、產品規劃及流程標準化。產品路線圖、工具與發布時程由總部決定；美國單位負責客戶支援及合規，卻沒有產品上線的最後決定權（附表 4）。',
+      '2024 年 1 月，Ken 告訴兩地員工，公司將結合「CareSync Way」與 Elderlyon 的穩健作法，打造世界級智慧長照。整合初期出現摩擦，總部將其視為正常的調適過程。'
+    ] }
+  ],
+
+  friction: {
+    intro: '從 1 月到 6 月，兩地團隊在幾項具體工作上逐漸出現分歧：',
+    events: [
+      { title: '全面導入總部專案工具（The Tool Mandate）', blocks: [
+        '總部要求美國單位改用總部的敏捷專案管理工具（Agile Project Management Tool），並在 3 月 31 日前將全部美國專案納入追蹤。美方主管回覆，新工具無法配合既有客戶支援流程，切換也會拖慢正在進行的導入案。到 5 月，約 60% 的美國專案使用新工具；不少團隊同時保留原有試算表與追蹤方式（附表 6a、6b、7）。'] },
+      { title: '跌倒偵測產品何時上線（The Fall-Detection Launch）', blocks: [
+        '總部希望將台灣銷售良好的產品帶到美國，於 9 月先在三家機構試點，再依回饋改善。Jennifer 關注美國機構對隱私的期待、室內感測器的同意程序、事件通報與夜班人力。美方產品主管及工程師認為，在住民使用前仍需數月調整，並要求先由當地法規專業人士檢視。雙方對時程、追加成本及風險各有判斷，尚無足以定論的最終數據（附表 5）。'] },
+      { title: '跨境週會的變化（Weekly Cross-Border Meetings）', blocks: [
+        '台北每星期二早上、加州星期一晚上，兩地主管透過視訊開會。1 月時，雙方仍共同討論工作；到了春天，美方發言與提問減少，也較少提出異議。會議逐漸變成由台北簡報、美方聆聽（附表 6c、7）。'] }
+    ],
+    after: [
+      '兩地主管對這些現象有不同解讀。一名派駐加州的總部經理認為美方有能力，卻做得太慢：',
+      { quote: '每個決定都要開三次會。如果我們等到大家完全同意，市場不會等我們。', src: '派駐加州的總部經理' },
+      '美方產品經理則說：',
+      { quote: '我們不是反對速度。我們反對的是，上線後才發現那些我們本來就能事先告訴他們的問題。', src: '美方產品經理' },
+      'Jennifer 曾在內部進行員工短問卷調查（Pulse Survey），了解兩地對整合的看法。附表 7 列出的回答顯示，台北與加州員工在能否向總部提出疑慮、專業是否受到重視，以及是否理解整合決策上，存在明顯差距。這項調查早於她主動提出赴美協助整合。',
+      '其他指標也不容易解讀。1 月以來，美國單位已有四名員工自願離職，其中兩名是工程師。美方在共同風險追蹤表登錄的議題，從交易前最後一季的 14 件降至第二季的 3 件；同時，需要升級處理的客戶事件卻從 4 件增加到 11 件。有些台北主管把議題減少視為問題正在解決，另一些人則不確定（附表 7）。第二季資料只到 6 月中，涵蓋期間與前兩季不同。'
+    ],
+    metricsTitle: '重點指標（摘自附表 7）',
+    question: '這些資料能支持什麼判斷？還不能證明什麼？',
+    hint: '同一組數字可能有不只一種解釋。先記下你的看法；完成初選後，會請你寫下證據分析。完整附表可在「資料夾」查看。'
+  },
+
+  proposalsIntro: [
+    '到星期日晚上，Ken 已把 John 的信讀了四遍。這個週末，他還收到了三則訊息，分別來自負責整合的總部主管、加州團隊負責人 Marcus，以及一名代表投資人的董事。三人對下一步各有主張。此外，Jennifer 也已主動提出赴美協助整合。這些不同的提議，將是星期一上午 9 點領導團隊會議要討論的問題。',
+    '這四項主張不是互斥且完備的答案：你可以選其一、組合多項，也可以另提方案。'
+  ],
+  proposals: [
+    { id: 'A', who: '總部整合主管', title: '維持方向，加強留才與執行',
+      text: '總部整合主管主張，不應因員工不適應就放慢整合。董事會希望先看到現有整合的進度，再討論新市場。',
+      moves: ['給關鍵工程師留任獎金。', '訂出全面使用新工具的期限。', '9 月先推出跌倒偵測試點，再進行在地化（Localization）。'] },
+    { id: 'B', who: 'Marcus（加州團隊負責人）', title: '暫停部分工作，重新分配決策權',
+      text: 'Marcus 認為，客戶購買 CareBridge 是因為它可靠且合規。倉促推出新產品，可能讓客戶與住民承擔風險。',
+      moves: ['暫停強制切換工具及跌倒偵測試點 90 天。', '成立共同指導委員會（Joint Steering Committee）。', '讓美方對合規及在地化有最後決定權。'],
+      scope: '暫停的是「強制切換工具」與「跌倒偵測試點」兩項，不是全部營運停擺。' },
+    { id: 'C', who: '代表投資人的董事', title: '讓美國單位保有較大自主權',
+      text: '這能降低立即改變美方作業的壓力，卻可能延後交叉銷售、單一平台等協同效益（Synergies），也意味著兩套營運方式將繼續並存。',
+      moves: ['讓 CareSync U.S. 大致獨立。', '只整合財務、報告及部分技術。', '一年後再檢討是否深化整合。'] },
+    { id: 'D', who: 'Jennifer（客戶成功長）', title: '主動赴美協調整合',
+      text: 'Jennifer 願意親赴加州，運用她在客戶成功、內部訓練及跨部門合作上的經驗。她在盡職調查時已接觸兩地團隊及美國客戶，但從未帶過併購整合。Jennifer 認為，另聘有經驗的整合主管需要數月。',
+      moves: ['由 Jennifer 親赴加州協調整合。'],
+      scope: '若由她負責，Ken 得決定她是否有權協調工程、人資與合規，以及她與台北派駐主管、美國領導團隊的關係。她目前的正式權限主要在客戶端，不包括工程、人資或設施管理。' }
+  ],
+  pressureTitle: '時間並不寬裕',
+  pressure: [
+    'John 已提出四週的離職預告，至少還有三名熟悉 CareBridge 舊架構的工程師在觀察他的去留。',
+    '年底前，約 180 家美國客戶中有 72 家的合約須續約，約占美國經常性收入（Recurring Revenue）的 40%。',
+    '六週後，Ken 還要向董事會報告，並討論另外三個新市場。'
+  ],
+  kenQuote: { quote: '我可以試著勸他不要辭職，給他更多錢、不同職務，但那沒有回應他真正說的問題。', src: 'Ken 在事後訪談中所說' },
+  closing: [
+    'Ken 看著星期一上午 9 點的議程。他無法在一場會議中改變兩個組織的工作方式，但必須決定哪些工作先暫停、哪些繼續，誰有權做哪些決策，以及如何回應 John、加州團隊與董事會。',
+    { quote: '哪一種選擇，最有可能守住這筆交易原本希望取得的價值？' }
+  ]
+};
+
+/* 附表：表格在手機上會改排成直式卡片。第一欄為每張卡片的標題。 */
+const EXHIBITS = [
+  { id: '1', title: '附表 1　CareSync 產品線（2023）', headers: ['產品', '功能', '典型使用者'], rows: [
+    ['電子健康紀錄系統', '數位住民紀錄：病史、用藥、過敏；整合監測數據', '日間照護中心至大型護理機構'],
+    ['遠距醫療平台', '視訊諮詢、預約、電子處方及付款', '行動不便或偏遠地區住民'],
+    ['生理數據監測裝置', '穿戴感測器監測心率、血壓、體溫及呼吸，警示連接電子健康紀錄', '照護人員'],
+    ['人工智慧跌倒偵測', '非接觸式感測器與演算法，在跌倒時通知照護人員', '照護人員，尤其夜班']] },
+  { id: '2', title: '附表 2　併購目標與里程碑', headers: ['目標', '里程碑', '取決於'], rows: [
+    ['保留 Elderlyon 客戶', '2024 年合約保留率 95% 以上', '支援人員與工程師持續服務'],
+    ['統一專案與交付系統', '2024/3/31 前全部美國專案進入總部工具', '美方採用；工具符合客戶流程'],
+    ['交叉銷售跌倒偵測', '2024/9 美國試點；2025 年底達美國客戶 25%', '在地化、隱私與同意檢視、客戶信任'],
+    ['單一技術平台', '2025 年中前將 CareBridge 遷至 CareSync 雲端', '少數工程師掌握的舊架構知識'],
+    ['國際成長', '2026 年美國收入占集團 35%', '以上各項']] },
+  { id: '3', title: '附表 3　人口老化與長照背景', headers: ['指標', '數值', '來源'], rows: [
+    ['全球 65 歲以上人口占比，2019', '9%（約每十一人就有一人）', 'United Nations (2019)'],
+    ['全球 65 歲以上人口占比，2050 預測', '16%（約每六人就有一人）', 'United Nations (2019)'],
+    ['每 100 位 65+ 人口的長照工作者（OECD 23 國平均）', '2011：5.9；2021：5.7', 'OECD (2023)，圖 10.18'],
+    ['長照總支出（OECD 平均，含健康與社會照護部分）', '2021：GDP 的 1.8%', 'OECD (2023)，圖 10.23']],
+    note: '來源：聯合國及 OECD 公開統計。工作者為人頭數，非全職當量；各國支出涵蓋範圍不同。支出水準不代表成本成長率。' },
+  { id: '4', title: '附表 4　交易後治理與決策權', headers: ['決策領域', '提案', '決定', '諮詢'], rows: [
+    ['產品路線圖及上線日期', '總部產品團隊', '總部領導層', '美國產品主管'],
+    ['專案工具及交付流程', '總部專案管理辦公室', '總部', '美國主管'],
+    ['在地化及合規要求', '美國團隊', '總部（上線簽核）', '美國合規負責人'],
+    ['客戶支援及客戶管理', '美國團隊', '美國總經理', '總部客戶成功團隊'],
+    ['招募及薪酬', '美國總經理', '預算內由美方決定；超額由總部決定', '總部人資'],
+    ['整合指導機制', '未正式成立', '未定義', '未定義']] },
+  { id: '5', title: '附表 5　跌倒偵測在地化決策：截至 2024 年 6 月的雙方立場', headers: ['議題', '總部立場', '美方立場'], rows: [
+    ['作法', '先以核心產品試點，再依回饋改善', '住民使用前先完成在地化'],
+    ['隱私及同意', '翻譯台灣既有同意流程', '室內感測器需新同意流程及家屬通知'],
+    ['事件通報', '僅向照護人員發警報', '連接機構事件通報流程'],
+    ['產品宣稱', '作為支援照護人員的工具', '先請美國法規顧問檢視用語'],
+    ['時程', '2024/9，三家機構試點', '2025/2-3 試點'],
+    ['追加成本', '試點前很少', '工程與審查約 45 萬美元'],
+    ['主要風險', '失去時間及董事會信任', '誤報或漏報傷害住民或客戶關係']],
+    note: '註：表列為雙方對實施方式及風險的判斷，並非法律結論。' },
+  { id: '6', title: '附表 6　溝通片段', blocks: [
+    { h: '6a　2024 年 2 月總部備忘錄' },
+    { quote: '為使各地交付一致，全部美國專案須於 3 月 31 日前納入集團專案系統。請據此安排訓練；例外須由總部負責整合的主管批准。' },
+    { h: '6b　美國工程主管回覆' },
+    { quote: '我們支持統一系統，擔心的是時機。3 月已有四個客戶上線，新工具尚不能處理支援工單。能否分團隊逐步切換？' },
+    { h: '6c　2024 年 5 月跨境週會' },
+    { dialog: [['總部產品負責人', '9 月試點機構已確認，有疑慮嗎？'], ['', '［停頓］'], ['美方工程師', '我們上個月寄了同意程序的意見。'], ['總部產品負責人', '有，在待辦清單裡。下一項。']] },
+    { h: '6d　John Lewis 2024 年 6 月辭職信節錄' },
+    { quote: '我在最初的整合會議中觀察 CareSync 的作法，認出了這種模式。[……] 客戶信任我們，是因為我們從不急著把關鍵醫療照護系統推上市場。我擔心這次併購會迫使我們妥協，放棄那些使 Elderlyon 成功的原則。' },
+    { note: '註：6d 為 John 辭職信節錄的中文翻譯。' }] },
+  { id: '7', title: '附表 7　人員與營運指標', headers: ['指標', '2023 Q4', '2024 Q1', '2024 Q2*'], rows: [
+    ['期末人數', '42', '40', '38'],
+    ['當期自願離職', '1', '2', '2'],
+    ['美方占跨境週會發言時間', '不適用', '34%', '16%'],
+    ['美方每次會議平均提問／異議', '不適用', '5.8', '1.4'],
+    ['美方風險追蹤議題數', '14', '9', '3'],
+    ['美國專案使用總部工具比例', '0%', '45%', '60%'],
+    ['美方衝刺承諾完成率（Sprint）', '不適用', '64%', '58%'],
+    ['客戶升級處理事件', '4', '5', '11']],
+    note: '*2024 Q2 僅計至 6 月中，並非完整一季。2024/12/31 前須續約者為約 180 家客戶中的 72 家，約占美國經常性收入 40%。' },
+  { id: '7b', title: '附表 7（續）　內部調查，2024 年 4 月（同意百分比）', headers: ['題目', '台北', '加州'], rows: [
+    ['我能安心向總部領導提出疑慮', '78%', '31%'],
+    ['我的專業受到重視', '74%', '35%'],
+    ['我理解整合決策的原因', '70%', '27%'],
+    ['我預期 12 個月後仍在此工作', '88%', '54%']] },
+  { id: '8', title: '附表 8　事件時間軸', timeline: [
+    ['2018', 'CareSync 在台灣成立'],
+    ['Elderlyon 交易前約 18 個月', '完成 Agingly 交易；技術整合出現系統當機，部分客戶與員工離開'],
+    ['2023 年初', '選中 Elderlyon，開始談判'],
+    ['2023/12/24', '交易完成，Elderlyon 成為 CareSync U.S.'],
+    ['2024/1', '三名總部主管派駐加州，開始整合'],
+    ['2024/2', '發布總部專案工具導入要求，期限為 3/31'],
+    ['2024 春季', '跨境會議參與下降；跌倒偵測爭議'],
+    ['2024/4', '內部調查'],
+    ['2024/6，星期五', 'John 提交辭職信'],
+    ['下一個星期一上午 9 點（待召開）', '領導團隊會議'],
+    ['約六週後', '董事會討論三個新市場']] }
+];
+const EXHIBIT_SOURCES = [
+  'OECD. (2023). Health at a glance 2023: OECD indicators. OECD Publishing. doi:10.1787/7a7afb35-en',
+  'United Nations, Department of Economic and Social Affairs, Population Division. (2019). World population prospects 2019: Highlights (ST/ESA/SER.A/423). United Nations.'
+];
+
+/* 第 3 步「重點指標」要顯示的附表 7 列（依指標名稱） */
+const FRICTION_METRICS = ['美方風險追蹤議題數', '客戶升級處理事件', '當期自願離職', '美方占跨境週會發言時間', '美國專案使用總部工具比例'];
+
+const OPTIONS = [
+  { id: 'A', label: '維持方向，加強留才與執行', desc: '總部整合主管的提議' },
+  { id: 'B', label: '暫停部分工作，重新分配決策權', desc: 'Marcus 的提議' },
+  { id: 'C', label: '讓美國單位保有較大自主權', desc: '代表投資人的董事的提議' },
+  { id: 'D', label: 'Jennifer 赴美協調整合', desc: 'Jennifer 的提議（需另決定授權與範圍）' },
+  { id: 'E', label: '組合或其他', desc: '組合多項提議，或提出你自己的方案' }
+];
+
+const PLAN_CHOICES = {
+  tool: [
+    { id: 'continue', label: '繼續' }, { id: 'pause90', label: '暫停 90 天' },
+    { id: 'adjust', label: '調整導入方式' }, { id: 'other', label: '其他' }
+  ],
+  fall: [
+    { id: 'keepSeptember', label: '維持 9 月試點' },
+    { id: 'localizeFirst', label: '先完成在地化與檢視再試點' }, { id: 'other', label: '其他' }
+  ],
+  lead: [
+    { id: 'hqLead', label: '現有總部主管' }, { id: 'jointCommittee', label: '共同委員會' },
+    { id: 'usTeam', label: '美國團隊' }, { id: 'jennifer', label: 'Jennifer' }, { id: 'other', label: '其他' }
+  ]
+};
+
+const PHASES = ['前 30 天', '31～60 天', '61～90 天'];
+
+/* 可能代價與待驗證問題：依個案推論，非實際結果 */
+const CONSEQUENCES = {
+  A: ['維持節奏有其價值，但留任獎金與期限，能否回應專業上的疑慮？', '誰來確認上線前的安全與在地化條件？'],
+  B: ['共同檢視增加了美方的空間，但 90 天如何不變成沒有交付的等待？', '委員會出現僵局時，由誰處理？'],
+  C: ['作業摩擦可能減少，但如何維持交易目標？', '一年後要憑什麼決定是否再整合？'],
+  D: ['熟悉兩地的人可以承接工作，但沒有跨部門授權，如何影響工程與人資？', '如何避免整合只依賴單一個人？'],
+  E: ['你納入的各項安排，哪些可能互相牴觸？']
+};
+
+/* =====================================================================
+   二、程式邏輯
+   ===================================================================== */
+
+let state = null;        // 目前作答者的完整紀錄
+let pending = null;      // 啟動時找到、尚未選擇「繼續」的草稿
+let storageOK = false;
+let saveFailed = false;
+let saveTimer = null;
+let viewStep = 0;
+let exportedThisSession = false;
+const startForm = { classCode: '', respondentCode: '', respondentType: 'individual' };
+
+const STEPS = [
+  { id: 'start', title: CONTENT.title, render: renderStart },
+  { id: 'letter', title: '星期五晚上：John 的辭職信', render: renderLetter },
+  { id: 'companies', title: '交易期待與兩家公司', render: renderCompanies },
+  { id: 'friction', title: '六個月的摩擦', render: renderFriction },
+  { id: 'proposals', title: '週末的提議', render: renderProposals },
+  { id: 'initial', title: '決策點 1：初步建議', render: renderInitial },
+  { id: 'analysis', title: '證據分析', render: renderAnalysis },
+  { id: 'plan', title: '權責與工作安排', render: renderPlan },
+  { id: 'phases', title: '30／60／90 天計畫', render: renderPhases },
+  { id: 'final', title: '決策點 2：最終選擇', render: renderFinal },
+  { id: 'consequences', title: '可能代價與待驗證問題', render: renderConsequences },
+  { id: 'summary', title: '結尾摘要與匯出', render: renderSummary }
+];
+const LAST = STEPS.length - 1;
+
+/* ---------- 小工具 ---------- */
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'text') el.textContent = v;
+    else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat(Infinity)) {
+    if (kid == null || kid === false) continue;
+    el.append(kid instanceof Node ? kid : String(kid));
+  }
+  return el;
+}
+const $ = (s, r = document) => r.querySelector(s);
+const nowISO = () => new Date().toISOString();
+const blank = v => v == null || String(v).trim() === '';
+const nn = v => blank(v) ? null : v;
+const clone = o => JSON.parse(JSON.stringify(o));
+function fmt(iso) {
+  if (!iso) return '—';
+  try { return new Date(iso).toLocaleString('zh-TW', { hour12: false }); } catch (e) { return iso; }
+}
+function getPath(o, p) { return p.split('.').reduce((x, k) => x == null ? undefined : x[k], o); }
+function setPath(o, p, v) {
+  const ks = p.split('.'); let x = o;
+  for (let i = 0; i < ks.length - 1; i++) { if (x[ks[i]] == null) x[ks[i]] = {}; x = x[ks[i]]; }
+  x[ks[ks.length - 1]] = v;
+}
+function optLabel(id) { const o = OPTIONS.find(x => x.id === id); return o ? `${o.id}｜${o.label}` : ''; }
+function planLabel(group, id) { const o = PLAN_CHOICES[group].find(x => x.id === id); return o ? o.label : ''; }
+function makeId() {
+  const d = new Date(), p = n => String(n).padStart(2, '0');
+  let r = '';
+  try { const a = new Uint32Array(1); crypto.getRandomValues(a); r = a[0].toString(36); } catch (e) { r = Math.random().toString(36).slice(2); }
+  return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}-${r.slice(0, 6)}`;
+}
+function safeName(s) {
+  const t = String(s || '').normalize('NFKC').replace(/[^\p{L}\p{N}_-]+/gu, '_').replace(/^_+|_+$/g, '').slice(0, 40);
+  return t || 'na';
+}
+function cur() { return state.attempts[state.current]; }
+function toast(msg) {
+  const t = $('#toast'); t.textContent = '';
+  setTimeout(() => { t.textContent = msg; }, 30);
+  clearTimeout(toast._t); toast._t = setTimeout(() => { t.textContent = ''; }, 5000);
+}
+
+/* ---------- 本機保存 ---------- */
+const prefix = () => `${CONFIG.storagePrefix}:v${CONFIG.version}:${CONFIG.edition}:${CONFIG.activityId}`;
+const recordKey = (cls, code) => `${prefix()}:rec:${encodeURIComponent(cls)}:${encodeURIComponent(code)}`;
+const pointerKey = () => `${prefix()}:last`;
+const fontKey = () => `${CONFIG.storagePrefix}:fontSize`;
+
+function testStorage() {
+  try { const k = '__caresync_test'; localStorage.setItem(k, '1'); localStorage.removeItem(k); return true; }
+  catch (e) { return false; }
+}
+function readJSON(k) { try { const s = localStorage.getItem(k); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
+function saveNow() {
+  clearTimeout(saveTimer); saveTimer = null;
+  if (!state) return;
+  state.updatedAt = nowISO();
+  if (!storageOK) { saveFailed = true; updateBanner(); return; }
+  try {
+    localStorage.setItem(recordKey(state.classCode, state.respondentCode), JSON.stringify(state));
+    localStorage.setItem(pointerKey(), JSON.stringify({ classCode: state.classCode, respondentCode: state.respondentCode }));
+    saveFailed = false;
+  } catch (e) { saveFailed = true; }
+  updateBanner(); updateSaveStatus();
+}
+function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 400); }
+function updateBanner() {
+  const b = $('#banner'); b.textContent = '';
+  if (state && (!storageOK || saveFailed)) {
+    b.append(h('p', { class: 'warn', role: 'alert' }, '無法自動保存（可能是無痕模式、已封鎖網站資料或儲存空間不足）。你仍可完成作答與下載，關閉前請務必下載。'));
+  }
+}
+function updateSaveStatus() {
+  const el = $('#saveStatus'); if (!el) return;
+  el.textContent = !state ? '' : (storageOK && !saveFailed) ? `已自動保存在此裝置（${fmt(state.updatedAt)}）` : '無法自動保存，關閉前請下載。';
+}
+function removeRecord(cls, code) {
+  try {
+    localStorage.removeItem(recordKey(cls, code));
+    const p = readJSON(pointerKey());
+    if (p && p.classCode === cls && p.respondentCode === code) localStorage.removeItem(pointerKey());
+  } catch (e) { /* 無法存取時忽略 */ }
+}
+function clearAllRecords() {
+  try {
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(CONFIG.storagePrefix + ':') && k !== fontKey()) keys.push(k); }
+    keys.forEach(k => localStorage.removeItem(k));
+  } catch (e) { /* 忽略 */ }
+}
+
+/* ---------- 資料模型 ---------- */
+function emptyChoice(final) {
+  const c = { optionId: '', combined: [], combinationNote: '', reason: '', evidence: '', risk: '' };
+  if (final) c.change = '';
+  return c;
+}
+function newAttempt(n) {
+  return {
+    attemptId: makeId(), number: n, startedAt: nowISO(), completedAt: null, step: 1, revealed: 1,
+    initialDraft: emptyChoice(false), initial: null,
+    analysis: { keyIssue: '', alternative: '' },
+    plan: {
+      toolChoice: '', toolNote: '', fallChoice: '', fallPreconditions: '',
+      leadChoice: '', leadAuthority: '', msgJohn: '', msgCalifornia: '', msgBoard: '',
+      phases: PHASES.map(() => ({ action: '', owner: '', signal: '', trigger: '' })), updatedAt: null
+    },
+    finalDraft: emptyChoice(true), final: null,
+    epilogueOpenedAt: null,
+    reflection: { useful: '', unproven: '', next: '', savedAt: null }
+  };
+}
+function newRecord(f) {
+  return {
+    schema: 'caresync-integration-decision', version: CONFIG.version, edition: CONFIG.edition, activityId: CONFIG.activityId,
+    classCode: f.classCode.trim(), respondentCode: f.respondentCode.trim(), respondentType: f.respondentType,
+    createdAt: nowISO(), updatedAt: nowISO(), current: 0, attempts: [newAttempt(1)]
+  };
+}
+
+/* ---------- 導覽 ---------- */
+function canVisit(i) {
+  if (i === 0) return true;
+  if (!state) return false;
+  if (i <= 5) return true;
+  if (i <= 9) return !!cur().initial;
+  return !!cur().final;
+}
+function go(i, opts = {}) {
+  if (!canVisit(i)) return;
+  viewStep = i;
+  if (state && i > 0) { cur().step = i; saveNow(); }
+  render();
+  window.scrollTo(0, 0);
+  if (opts.focus !== false) { const t = $('#stepTitle'); if (t) t.focus({ preventScroll: true }); }
+}
+function render() {
+  const main = $('#main'); main.textContent = '';
+  main.append(STEPS[viewStep].render());
+  const p = $('#progress'); p.textContent = '';
+  if (viewStep === 0) p.append('開始');
+  else p.append(`第 ${viewStep}／${LAST} 步｜${STEPS[viewStep].title}`);
+  p.append(h('div', { class: 'pbar', 'aria-hidden': 'true' }, h('span', { style: `width:${Math.round(viewStep / LAST * 100)}%` })));
+  updateBanner();
+  document.title = viewStep === 0 ? 'CareSync 整合抉擇' : `${STEPS[viewStep].title}｜CareSync 整合抉擇`;
+}
+function shell(i, ...body) {
+  return h('section', { class: 'step', 'aria-labelledby': 'stepTitle' },
+    i === 0 ? h('p', { class: 'kicker' }, '互動個案') : null,
+    h('h1', { id: 'stepTitle', tabindex: '-1' }, STEPS[i].title),
+    body,
+    h('p', { class: 'source-note' }, CONTENT.sourceNote));
+}
+function navRow(i, o = {}) {
+  const prev = i >= 1 ? h('button', { type: 'button', class: 'btn', onclick: () => go(i - 1) }, '← 上一步') : h('span');
+  let next = h('span');
+  if (o.next !== false && i < LAST) {
+    next = h('button', { type: 'button', class: 'btn btn-primary', disabled: o.nextDisabled || null,
+      'aria-describedby': o.nextHint ? 'navHint' : null, onclick: () => go(i + 1) }, o.nextLabel || '下一步 →');
+  }
+  return h('nav', { class: 'step-nav no-print', 'aria-label': '上一步與下一步' },
+    o.nextHint ? h('p', { id: 'navHint', class: 'hint' }, o.nextHint) : null,
+    h('div', { class: 'nav-buttons' }, prev, next));
+}
+
+/* ---------- 表單元件 ---------- */
+let fieldSeq = 0;
+function textField(o) {
+  const id = 'f' + (++fieldSeq);
+  const max = o.max || CONFIG.maxChars;
+  const val = getPath(o.obj, o.path) || '';
+  const counter = h('span', { id: id + '_c' }, `${val.length}／${max} 字`);
+  const err = h('p', { class: 'err', id: id + '_e', hidden: true });
+  const describedBy = [o.hint ? id + '_h' : null, id + '_c', id + '_e'].filter(Boolean).join(' ');
+  const input = h(o.single ? 'input' : 'textarea', {
+    id, name: id, maxlength: max, rows: o.single ? null : (o.rows || 4), type: o.single ? 'text' : null,
+    'aria-describedby': describedBy, readonly: o.readonly || null, autocomplete: 'off',
+    'data-required': o.required ? '1' : null, 'data-missing': o.missing || '請補上這一欄', 'data-err': id + '_e'
+  });
+  input.value = val;
+  input.addEventListener('input', () => {
+    setPath(o.obj, o.path, input.value);
+    counter.textContent = `${input.value.length}／${max} 字`;
+    if (input.value.trim()) clearError(input);
+    if (o.onInput) o.onInput(input.value);
+    if (o.store !== false) scheduleSave();
+  });
+  return h('div', { class: 'field' },
+    h('label', { for: id }, o.label, o.required ? h('span', { class: 'req' }, '（必填）') : h('span', { class: 'opt' }, '（選填）')),
+    o.hint ? h('p', { class: 'hint', id: id + '_h' }, o.hint) : null,
+    input, h('div', { class: 'meta' }, counter), err);
+}
+function choiceGroup(o) {
+  const name = 'g' + (++fieldSeq);
+  const err = h('p', { class: 'err', id: name + '_e', hidden: true });
+  const fs = h('fieldset', { 'data-required': o.required ? '1' : null, 'data-missing': o.missing || '請選擇一項', 'data-err': name + '_e' },
+    h('legend', {}, o.legend, o.required ? h('span', { class: 'req' }, '（必填）') : null));
+  if (o.hint) fs.append(h('p', { class: 'hint' }, o.hint));
+  const labels = [];
+  const current = getPath(o.obj, o.path);
+  o.options.forEach(opt => {
+    const id = name + '_' + opt.id;
+    const input = h('input', { type: 'radio', name, id, value: opt.id, checked: current === opt.id || null, disabled: o.readonly || null });
+    const lab = h('label', { class: 'choice' + (current === opt.id ? ' is-selected' : '') + (o.readonly ? ' is-locked' : ''), for: id },
+      input, h('span', { class: 'choice-text' },
+        h('span', {}, h('strong', {}, opt.text || opt.label), ' ', h('span', { class: 'sel-tag' }, '✓ 已選')),
+        opt.desc ? h('span', { class: 'choice-desc' }, opt.desc) : null));
+    input.addEventListener('change', () => {
+      if (!input.checked) return;
+      setPath(o.obj, o.path, opt.id);
+      labels.forEach(l => l.classList.toggle('is-selected', l === lab));
+      clearError(fs);
+      if (o.onChange) o.onChange(opt.id);
+      scheduleSave();
+    });
+    labels.push(lab); fs.append(lab);
+  });
+  fs.append(err);
+  return fs;
+}
+function checkGroup(o) {
+  const name = 'c' + (++fieldSeq);
+  const fs = h('fieldset', {}, h('legend', {}, o.legend, h('span', { class: 'opt' }, '（可複選，也可不選）')));
+  const arr = getPath(o.obj, o.path) || [];
+  o.options.forEach(opt => {
+    const id = name + '_' + opt.id;
+    const input = h('input', { type: 'checkbox', id, value: opt.id, checked: arr.includes(opt.id) || null, disabled: o.readonly || null });
+    const lab = h('label', { class: 'choice' + (arr.includes(opt.id) ? ' is-selected' : ''), for: id },
+      input, h('span', { class: 'choice-text' }, h('span', {}, h('strong', {}, optLabel(opt.id)), ' ', h('span', { class: 'sel-tag' }, '✓ 已勾選'))));
+    input.addEventListener('change', () => {
+      const list = (getPath(o.obj, o.path) || []).filter(x => x !== opt.id);
+      if (input.checked) list.push(opt.id);
+      list.sort();
+      setPath(o.obj, o.path, list);
+      lab.classList.toggle('is-selected', input.checked);
+      if (o.onChange) o.onChange(list);
+      scheduleSave();
+    });
+    fs.append(lab);
+  });
+  return fs;
+}
+function showError(el, msg) {
+  const e = document.getElementById(el.dataset.err);
+  if (e) { e.textContent = msg; e.hidden = false; }
+  if (el.tagName === 'FIELDSET') el.querySelectorAll('input').forEach(i => i.setAttribute('aria-invalid', 'true'));
+  else el.setAttribute('aria-invalid', 'true');
+}
+function clearError(el) {
+  const e = document.getElementById(el.dataset.err);
+  if (e) { e.textContent = ''; e.hidden = true; }
+  if (el.tagName === 'FIELDSET') el.querySelectorAll('input').forEach(i => i.removeAttribute('aria-invalid'));
+  else el.removeAttribute('aria-invalid');
+}
+function validate(root) {
+  let first = null, count = 0;
+  root.querySelectorAll('[data-required]').forEach(el => {
+    if (el.closest('[hidden]')) { clearError(el); return; }
+    const ok = el.tagName === 'FIELDSET' ? !!el.querySelector('input:checked') : el.value.trim() !== '';
+    if (ok) clearError(el);
+    else { showError(el, el.dataset.missing); count++; if (!first) first = el; }
+  });
+  const sum = root.querySelector('.form-summary');
+  if (count) {
+    if (sum) { sum.textContent = `還有 ${count} 個必填欄位需要補上，請查看標示的欄位。`; sum.hidden = false; }
+    const target = first.tagName === 'FIELDSET' ? first.querySelector('input') : first;
+    target.focus(); first.scrollIntoView({ block: 'center' });
+    return false;
+  }
+  if (sum) sum.hidden = true;
+  return true;
+}
+
+/* ---------- 畫面 0：開始 ---------- */
+function renderStart() {
+  const body = [];
+  body.push(h('p', { class: 'task' }, CONTENT.start.task));
+  body.push(h('p', {}, CONTENT.start.role));
+  body.push(h('div', { class: 'callout' }, h('ul', {}, CONTENT.start.notes.map(n => h('li', {}, n)))));
+  body.push(h('p', { class: 'small' }, CONTENT.start.flow));
+  body.push(h('p', { class: 'small' }, CONTENT.start.reading));
+  body.push(h('p', { class: 'small' }, CONTENT.anonymity));
+  if (!storageOK) body.push(h('p', { class: 'warn' }, '此瀏覽器目前無法自動保存（可能是無痕模式或已封鎖網站資料）。仍可作答與下載，關閉前請務必下載。'));
+
+  if (state) {
+    body.push(h('div', { class: 'card' },
+      h('h2', {}, '目前作答中'),
+      h('p', {}, `課程／班級代碼：${state.classCode}｜作答代碼：${state.respondentCode}（第 ${cur().number} 次嘗試）`),
+      h('div', { class: 'btn-row' },
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: () => go(Math.max(1, cur().step || 1)) }, '繼續作答'),
+        h('button', { type: 'button', class: 'btn btn-danger', onclick: confirmClearCurrent }, '清除此紀錄後重來'))));
+    return shell(0, body);
+  }
+  if (pending) {
+    const a = pending.attempts[pending.current];
+    body.push(h('div', { class: 'card', role: 'region', 'aria-label': '此裝置上的草稿' },
+      h('h2', {}, '此裝置上有作答草稿'),
+      h('p', {}, `課程／班級代碼：${pending.classCode}｜作答代碼：${pending.respondentCode}`),
+      h('p', { class: 'small' }, `第 ${a.number} 次嘗試｜最後更新：${fmt(pending.updatedAt)}${a.final ? '｜已提交最終選擇' : ''}`),
+      h('p', { class: 'small' }, '如果這不是你的作答（例如共用電腦），請選「清除後重來」。'),
+      h('div', { class: 'btn-row' },
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: () => { state = pending; pending = null; go(Math.max(1, cur().step || 1)); } }, '繼續'),
+        h('button', { type: 'button', class: 'btn btn-danger', onclick: async () => {
+          if (!(await ask('確定要清除這份草稿嗎？清除後無法復原。', '清除草稿', true))) return;
+          removeRecord(pending.classCode, pending.respondentCode); pending = null; render(); toast('已清除此裝置上的草稿');
+        } }, '清除後重來'))));
+  }
+
+  const form = h('form', { class: 'card', novalidate: true, 'aria-labelledby': 'startFormTitle' });
+  form.append(h('h2', { id: 'startFormTitle', style: 'margin-top:0' }, '開始作答'));
+  form.append(textField({ obj: startForm, path: 'classCode', label: '課程／班級代碼', single: true, required: true, max: CONFIG.maxCodeChars,
+    missing: '請補上課程／班級代碼', hint: '依老師指定填寫，例如：EMBA-A。', store: false }));
+  form.append(choiceGroup({ obj: startForm, path: 'respondentType', legend: '作答身分', options: [
+    { id: 'individual', label: '個人作答' }, { id: 'group', label: '組別作答' }] }));
+  form.append(textField({ obj: startForm, path: 'respondentCode', label: '個人作答代碼或組別', single: true, required: true, max: CONFIG.maxCodeChars,
+    missing: '請補上作答代碼或組別', hint: '可用學號、座號或組別代碼代替姓名；請勿填寫電話、電子郵件。', store: false }));
+  form.append(h('p', { class: 'form-summary', role: 'alert', hidden: true }));
+  form.append(h('div', { class: 'btn-row' }, h('button', { type: 'submit', class: 'btn btn-primary' }, '開始')));
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!validate(form)) return;
+    const cls = startForm.classCode.trim(), code = startForm.respondentCode.trim();
+    const existing = storageOK ? readJSON(recordKey(cls, code)) : null;
+    if (existing && existing.attempts && existing.attempts.length) {
+      if (!(await ask(`此裝置上已有代碼「${code}」的作答紀錄。要載入並繼續嗎？若不是你的紀錄，請按「取消」並改用其他代碼。`, '載入並繼續'))) return;
+      state = existing; pending = null;
+      toast('已載入此代碼在本裝置上的作答');
+      go(Math.max(1, cur().step || 1));
+      return;
+    }
+    state = newRecord(startForm); pending = null;
+    startForm.classCode = ''; startForm.respondentCode = '';
+    saveNow(); go(1);
+  });
+  body.push(form);
+  body.push(h('div', { class: 'no-print' },
+    h('button', { type: 'button', class: 'linkish', onclick: confirmClearAll }, '共用裝置：清除此裝置上所有 CareSync 作答紀錄')));
+  return shell(0, body);
+}
+async function confirmClearCurrent() {
+  if (!state) return;
+  if (!(await ask('確定要清除此裝置上這位作答者的所有紀錄（含已完成的嘗試）嗎？清除前請確認已下載需要的檔案。此動作無法復原。', '清除紀錄', true))) return;
+  removeRecord(state.classCode, state.respondentCode);
+  state = null; pending = null; saveFailed = false;
+  closeAllDialogs(); go(0); toast('已清除此裝置上的紀錄');
+}
+async function confirmClearAll() {
+  if (!(await ask('確定要清除此裝置上所有 CareSync 作答紀錄嗎？其他人的草稿也會一併刪除，且無法復原。', '全部清除', true))) return;
+  clearAllRecords(); state = null; pending = null; saveFailed = false;
+  closeAllDialogs(); go(0); toast('已清除此裝置上的所有作答紀錄');
+}
+
+/* ---------- 教材段落與附表 ---------- */
+function renderBlocks(blocks) {
+  return (blocks || []).map(b => {
+    if (typeof b === 'string') return h('p', {}, b);
+    if (b.h) return h('h3', { class: 'blk-h' }, b.h);
+    if (b.quote) return h('figure', { class: 'quote' }, h('blockquote', {}, h('p', {}, `「${b.quote}」`)),
+      b.src ? h('figcaption', {}, `——${b.src}`) : null);
+    if (b.ul) return h('ul', {}, b.ul.map(x => h('li', {}, x)));
+    if (b.items) return h('ul', { class: 'items' }, b.items.map(([t, d]) => h('li', {}, h('strong', {}, t), d ? '：' + d : '')));
+    if (b.dialog) return h('div', { class: 'quote dialog' }, b.dialog.map(([who, line]) =>
+      who ? h('p', {}, h('strong', {}, who + '：'), `「${line}」`) : h('p', { class: 'small' }, line)));
+    if (b.table) return exhibitView(typeof b.table === 'string' ? EXHIBITS.find(x => x.id === b.table) : b.table, true);
+    if (b.note) return h('p', { class: 'small' }, b.note);
+    return null;
+  });
+}
+/* 表格一律改排成卡片：每列一張卡片，第一欄為標題，其餘欄以「欄名：值」呈現 */
+function tableCards(headers, rows) {
+  return h('div', { class: 'tcards' }, rows.map(r => h('div', { class: 'tcard' },
+    h('p', { class: 'tcard-title' }, r[0]),
+    h('dl', {}, headers.slice(1).map((hd, i) => [h('dt', {}, hd), h('dd', {}, r[i + 1])])))));
+}
+function exhibitView(x, inline) {
+  if (!x) return null;
+  return h('section', { class: 'exhibit', id: inline ? null : 'fd-ex' + x.id, tabindex: inline ? null : '-1' },
+    h(inline ? 'h3' : 'h3', { class: 'ex-title' }, x.title),
+    x.rows ? tableCards(x.headers, x.rows) : null,
+    x.timeline ? h('ol', { class: 'timeline' }, x.timeline.map(t => h('li', {}, h('b', {}, t[0]), t[1]))) : null,
+    x.blocks ? renderBlocks(x.blocks) : null,
+    x.note ? h('p', { class: 'small' }, x.note) : null);
+}
+
+/* ---------- 畫面 1～4：情境 ---------- */
+function renderLetter() {
+  const L = CONTENT.letter;
+  return shell(1,
+    h('article', { class: 'card letter', 'aria-label': '星期五晚上：一封辭職信' },
+      h('p', { class: 'letter-meta' }, L.meta), renderBlocks(L.blocks)),
+    h('div', { class: 'callout' }, h('h2', { style: 'margin-top:0;font-size:1.1rem' }, L.mondayTitle), h('ul', {}, L.monday.map(x => h('li', {}, x)))),
+    navRow(1));
+}
+function renderCompanies() {
+  const a = cur();
+  const total = CONTENT.companies.length;
+  const n = Math.min(a.revealed || 1, total);
+  const list = h('div', {});
+  CONTENT.companies.slice(0, n).forEach((c, idx) => list.append(
+    h('div', { class: 'card reveal-item', id: 'reveal' + idx, tabindex: '-1' }, h('h2', {}, c.title), renderBlocks(c.blocks))));
+  const all = n >= total;
+  return shell(2,
+    h('p', {}, `請依序展開 ${total} 段。文中提到的附表，可隨時在上方「資料夾」查看。`),
+    list,
+    all ? null : h('div', { class: 'btn-row' }, h('button', { type: 'button', class: 'btn btn-primary', onclick: () => {
+      a.revealed = n + 1; saveNow(); render();
+      const el = $('#reveal' + n); if (el) { el.focus(); el.scrollIntoView({ block: 'start' }); }
+    } }, `展開下一段（${n + 1}／${total}）`)),
+    navRow(2, { nextDisabled: !all, nextHint: all ? null : `請先展開全部 ${total} 段，再進入下一步。` }));
+}
+function renderFriction() {
+  const F = CONTENT.friction;
+  const ex7 = EXHIBITS.find(x => x.id === '7'), ex7b = EXHIBITS.find(x => x.id === '7b');
+  const rows = FRICTION_METRICS.map(name => ex7.rows.find(r => r[0] === name)).filter(Boolean);
+  return shell(3,
+    h('p', {}, F.intro),
+    F.events.map(e => h('div', { class: 'card event' }, h('h2', {}, e.title), renderBlocks(e.blocks))),
+    renderBlocks(F.after),
+    h('h2', {}, F.metricsTitle),
+    tableCards(ex7.headers, rows),
+    h('p', { class: 'small' }, ex7.note),
+    h('h2', {}, ex7b.title.replace(/^附表 7（續）\s*/, '內部調查：')),
+    tableCards(ex7b.headers, ex7b.rows),
+    h('div', { class: 'callout' }, h('p', { class: 'task' }, F.question), h('p', {}, F.hint)),
+    navRow(3));
+}
+function proposalCard(p) {
+  return h('article', { class: 'proposal', 'aria-labelledby': 'prop' + p.id },
+    h('div', { class: 'proposal-head' }, h('span', { class: 'badge', 'aria-hidden': 'true' }, p.id),
+      h('div', {}, h('h2', { id: 'prop' + p.id }, `${p.id}｜${p.who}：${p.title}`))),
+    h('h3', {}, '主張'), h('p', {}, p.text),
+    h('h3', {}, '做法'), h('ul', {}, p.moves.map(m => h('li', {}, m))),
+    p.scope ? [h('h3', {}, '範圍與待決事項'), h('p', {}, p.scope)] : null);
+}
+function renderProposals() {
+  return shell(4,
+    renderBlocks(CONTENT.proposalsIntro),
+    CONTENT.proposals.map(proposalCard),
+    h('div', { class: 'callout' }, h('h2', { style: 'margin-top:0;font-size:1.1rem' }, CONTENT.pressureTitle),
+      h('ul', {}, CONTENT.pressure.map(x => h('li', {}, x)))),
+    renderBlocks([CONTENT.kenQuote]),
+    renderBlocks(CONTENT.closing),
+    navRow(4, { nextLabel: '進入初步建議 →' }));
+}
+
+/* ---------- 決策表單 ---------- */
+function choiceForm(draft, o) {
+  const wrap = h('div', {});
+  const combo = h('div', { class: 'card', hidden: draft.optionId !== 'E' || null });
+  const jen = h('p', { class: 'notice', hidden: true, role: 'note' });
+  const refreshJen = () => {
+    if (!o.final) return;
+    const hasD = draft.optionId === 'D' || (draft.optionId === 'E' && (draft.combined || []).includes('D')) || cur().plan.leadChoice === 'jennifer';
+    jen.hidden = !hasD;
+  };
+  jen.append('你的方案納入 Jennifer。提醒：請確認已在「權責與工作安排」寫清她的授權範圍、資源、向誰報告，以及與既有主管的關係（此提醒不評判內容）。',
+    h('br'), h('button', { type: 'button', class: 'linkish', onclick: () => go(7) }, '前往權責與工作安排'));
+  wrap.append(choiceGroup({ obj: draft, path: 'optionId', legend: o.legend, required: true, missing: '請選擇一個主要方向',
+    options: OPTIONS.map(x => ({ id: x.id, text: `${x.id}｜${x.label}`, desc: x.desc })),
+    onChange: v => { combo.hidden = v !== 'E'; refreshJen(); } }));
+  combo.append(checkGroup({ obj: draft, path: 'combined', legend: '納入哪些提議', options: OPTIONS.filter(x => x.id !== 'E'), onChange: refreshJen }));
+  combo.append(textField({ obj: draft, path: 'combinationNote', label: '組合或其他方案說明', required: true, missing: '請補上組合或其他方案的說明',
+    hint: '說明你如何組合、調整，或另提什麼方案。' }));
+  wrap.append(combo);
+  wrap.append(jen);
+  wrap.append(textField({ obj: draft, path: 'reason', label: o.final ? '最終理由' : '理由', required: true, missing: '請補上你的理由' }));
+  wrap.append(textField({ obj: draft, path: 'evidence', label: '個案依據', required: true, missing: '請補上個案依據',
+    hint: '至少寫出一個來自個案的依據，例如事件、指標或某方的立場。' }));
+  wrap.append(textField({ obj: draft, path: 'risk', label: o.final ? '最大代價' : '最擔心的代價', required: true, missing: '請補上你最擔心的代價' }));
+  if (o.final) wrap.append(textField({ obj: draft, path: 'change', label: '相較初選，什麼改變了？或為什麼不變？', required: true,
+    missing: '請補上與初選相較的想法' }));
+  refreshJen();
+  return wrap;
+}
+function choiceBlock(c, title, isFinal) {
+  if (!c) return h('div', { class: 'card choice-block' }, h('h3', { class: 'cb-title' }, title), h('p', { class: 'answer empty' }, '（尚未保存）'));
+  return h('div', { class: 'card choice-block' },
+    h('h3', { class: 'cb-title' }, title),
+    h('p', { class: 'cb-opt' }, optLabel(c.optionId)),
+    c.optionId === 'E' ? [qa('納入的提議', c.combined && c.combined.length ? c.combined.map(optLabel).join('、') : '（未勾選，另提方案）'),
+      qa('組合或其他方案說明', c.combinationNote)] : null,
+    qa(isFinal ? '最終理由' : '理由', c.reason), qa('個案依據', c.evidence), qa(isFinal ? '最大代價' : '最擔心的代價', c.risk),
+    isFinal ? qa('相較初選，什麼改變了／為何不變', c.change) : null,
+    h('p', { class: 'meta-time' }, `保存時間：${fmt(c.savedAt)}`));
+}
+function qa(label, value) {
+  return h('div', { class: 'qa' }, h('h3', {}, label), h('p', { class: 'answer' + (blank(value) ? ' empty' : '') }, blank(value) ? '（未填）' : value));
+}
+
+/* ---------- 畫面 5：初選 ---------- */
+function renderInitial() {
+  const a = cur();
+  if (a.initial) {
+    return shell(5,
+      h('p', { class: 'locked-note' }, `初選已於 ${fmt(a.initial.savedAt)} 保存為固定快照，之後的最終選擇會另外記錄，不會覆寫這份初選。`),
+      choiceBlock(a.initial, '你的初步建議', false),
+      navRow(5));
+  }
+  const form = h('form', { novalidate: true });
+  form.append(h('p', {}, '請先依目前讀到的資料，提出初步建議。保存後會形成固定的初選快照（記錄時間），之後不能修改；討論後的最終選擇會另外記錄。'));
+  form.append(h('p', { class: 'small' }, '四項提議不是互斥且完備的答案。可回到前面任何情境重讀，已填內容會保留。'));
+  form.append(choiceForm(a.initialDraft, { legend: '主要方向', final: false }));
+  form.append(h('p', { class: 'form-summary', role: 'alert', hidden: true }));
+  const btn = h('button', { type: 'submit', class: 'btn btn-primary' }, '保存初選');
+  form.append(h('div', { class: 'btn-row' }, btn));
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (btn.disabled || !validate(form)) return;
+    btn.disabled = true;
+    if (!(await ask('保存後，這份初選會成為固定快照，之後不能修改（最終選擇會另外記錄）。確定保存？', '保存初選'))) { btn.disabled = false; return; }
+    const d = clone(a.initialDraft);
+    if (d.optionId !== 'E') { d.combined = []; d.combinationNote = ''; }
+    a.initial = Object.assign(d, { savedAt: nowISO() });
+    saveNow(); toast('初選已保存'); go(5);
+  });
+  return shell(5, form, navRow(5, { nextDisabled: true, nextHint: '保存初選後，才能進入證據分析。' }));
+}
+
+/* ---------- 畫面 6～8：分析與計畫 ---------- */
+function lockedNote(a) {
+  return a.final ? h('p', { class: 'locked-note' }, `本次嘗試已於 ${fmt(a.final.savedAt)} 提交，以下內容僅供檢視。`) : null;
+}
+function renderAnalysis() {
+  const a = cur(), ro = !!a.final;
+  return shell(6,
+    lockedNote(a),
+    h('p', {}, '可先與小組討論，再寫下你的分析。這裡沒有自動診斷，也不只限於國家文化的角度。'),
+    textField({ obj: a.analysis, path: 'keyIssue', label: '① 你認為最重要的問題是什麼？個案依據是什麼？', readonly: ro, rows: 5 }),
+    textField({ obj: a.analysis, path: 'alternative', label: '② 有沒有另一種可能的解釋？還缺少哪些資訊？', readonly: ro, rows: 5,
+      hint: '例如：指標的期間是否可比、沉默可能代表什麼、哪些資料還沒看到。' }),
+    navRow(6));
+}
+function renderPlan() {
+  const a = cur(), p = a.plan, ro = !!a.final;
+  const touch = () => { p.updatedAt = nowISO(); };
+  const tf = o => textField(Object.assign({ obj: p, readonly: ro, onInput: touch }, o));
+  const cg = o => choiceGroup(Object.assign({ obj: p, readonly: ro, onChange: touch }, o));
+  return shell(7,
+    lockedNote(a),
+    h('p', {}, '把你的方向轉成可執行的安排。各欄皆為選填，可依你的方案取捨。'),
+    h('h2', {}, '工具切換'),
+    cg({ path: 'toolChoice', legend: '總部工具的切換', options: PLAN_CHOICES.tool }),
+    tf({ path: 'toolNote', label: '補充安排與理由' }),
+    h('h2', {}, '跌倒偵測'),
+    cg({ path: 'fallChoice', legend: '跌倒偵測試點', options: PLAN_CHOICES.fall }),
+    tf({ path: 'fallPreconditions', label: '啟動前必要條件', hint: '寫出試點啟動前必須先具備的條件。網頁不判定合法性。' }),
+    h('h2', {}, '整合領導'),
+    cg({ path: 'leadChoice', legend: '由誰領導整合', options: PLAN_CHOICES.lead }),
+    tf({ path: 'leadAuthority', label: '權限、資源與報告對象', rows: 6,
+      hint: '寫清楚權限、資源與向誰報告；哪些決定由美方作主、哪些由總部作主、哪些共同作主。' }),
+    h('h2', {}, '溝通草稿'),
+    h('p', { class: 'small' }, '這是課堂草稿，不會發送給任何人。'),
+    tf({ path: 'msgJohn', label: '給 John 的訊息重點' }),
+    tf({ path: 'msgCalifornia', label: '給加州團隊的訊息重點' }),
+    tf({ path: 'msgBoard', label: '給董事會的訊息重點' }),
+    navRow(7));
+}
+function renderPhases() {
+  const a = cur(), ro = !!a.final;
+  const touch = () => { a.plan.updatedAt = nowISO(); };
+  return shell(8,
+    lockedNote(a),
+    h('p', {}, '每個階段只寫一個最重要的行動。不必每段都填，也不必把所有事情都分成三段。'),
+    PHASES.map((title, i) => h('div', { class: 'card phase' }, h('h2', {}, title),
+      textField({ obj: a.plan.phases[i], path: 'action', label: '最重要的行動', rows: 3, readonly: ro, onInput: touch }),
+      textField({ obj: a.plan.phases[i], path: 'owner', label: '負責角色', single: true, max: 200, readonly: ro, onInput: touch }),
+      textField({ obj: a.plan.phases[i], path: 'signal', label: '如何知道有進展', rows: 3, readonly: ro, onInput: touch }),
+      textField({ obj: a.plan.phases[i], path: 'trigger', label: '什麼結果會讓我調整', rows: 3, readonly: ro, onInput: touch }))),
+    navRow(8));
+}
+
+/* ---------- 畫面 9：最終選擇 ---------- */
+function renderFinal() {
+  const a = cur();
+  const initialView = h('details', { class: 'cons' }, h('summary', {}, '查看你的初選（唯讀）'), choiceBlock(a.initial, '初步建議', false));
+  if (a.final) {
+    return shell(9,
+      h('p', { class: 'locked-note' }, `最終選擇已於 ${fmt(a.final.savedAt)} 提交。初選與最終選擇都會保留。`),
+      initialView, choiceBlock(a.final, '你的最終選擇', true),
+      navRow(9, { nextLabel: '查看可能代價與追問 →' }));
+  }
+  const form = h('form', { novalidate: true });
+  form.append(h('p', {}, '完成權責與行動計畫、並經過討論後，請再次表態。你可以維持或改變初選；兩次選擇都會保留，最後一票不會蓋掉前一票。'));
+  form.append(initialView);
+  form.append(choiceForm(a.finalDraft, { legend: '最終的主要方向', final: true }));
+  form.append(h('p', { class: 'form-summary', role: 'alert', hidden: true }));
+  const btn = h('button', { type: 'submit', class: 'btn btn-primary' }, '提交最終選擇');
+  form.append(h('p', { class: 'small' }, '提交後，本次嘗試的分析、計畫與最終選擇會鎖定，並顯示可能代價與待驗證問題。'));
+  form.append(h('div', { class: 'btn-row' }, btn));
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (btn.disabled || !validate(form)) return;
+    btn.disabled = true;
+    if (!(await ask('提交後，本次嘗試的分析、計畫與最終選擇將鎖定，不能再修改。確定提交？', '提交'))) { btn.disabled = false; return; }
+    const d = clone(a.finalDraft);
+    if (d.optionId !== 'E') { d.combined = []; d.combinationNote = ''; }
+    const t = nowISO();
+    a.final = Object.assign(d, { savedAt: t });
+    a.completedAt = t;
+    saveNow(); toast('最終選擇已提交'); go(10);
+  });
+  return shell(9, form, navRow(9, { nextDisabled: true, nextHint: '提交最終選擇後，才會顯示可能代價與待驗證問題。' }));
+}
+
+/* ---------- 畫面 10：可能代價 ---------- */
+function renderConsequences() {
+  const a = cur();
+  const fin = a.final, ini = a.initial;
+  const included = new Set(fin.optionId === 'E' ? (fin.combined || []) : [fin.optionId]);
+  const cards = OPTIONS.map(o => {
+    const tags = [];
+    if (fin.optionId === o.id) tags.push(h('span', { class: 'tag' }, '你的最終選擇'));
+    else if (fin.optionId === 'E' && included.has(o.id)) tags.push(h('span', { class: 'tag' }, '納入你的組合'));
+    if (ini && ini.optionId === o.id) tags.push(h('span', { class: 'tag' }, '你的初選'));
+    let items = CONSEQUENCES[o.id] || [];
+    if (o.id === 'E' && fin.optionId === 'E') {
+      const extra = [];
+      (fin.combined || []).forEach(id => (CONSEQUENCES[id] || []).forEach(q => extra.push(`（${id}）${q}`)));
+      items = extra.concat(items);
+    }
+    const open = fin.optionId === o.id || (fin.optionId === 'E' && included.has(o.id));
+    return h('details', { class: 'cons', open: open || null },
+      h('summary', {}, h('span', {}, optLabel(o.id)), tags),
+      h('ul', {}, items.map(q => h('li', {}, q))));
+  });
+  const parts = [
+    h('p', { class: 'notice' }, '以下依個案推論，非實際結果。'),
+    h('p', {}, '每條路徑都有可能的代價與待驗證的問題。所有選項都可展開比較；這裡沒有總分、成功率或推薦標記。'),
+    cards
+  ];
+  if (EPILOGUE) parts.push(renderEpilogueBlock(a));
+  else parts.push(h('div', { class: 'callout' }, h('p', {}, '課堂版不含後記。老師會在再次表態後另行發下；讀完或課堂討論後，請在下一步填寫反思。')));
+  return shell(10, parts, navRow(10, { nextLabel: '結尾摘要與匯出 →' }));
+}
+function renderEpilogueBlock(a) {
+  const box = h('div', { class: 'card', id: 'epilogue', tabindex: '-1' });
+  const fill = () => {
+    box.textContent = '';
+    box.append(h('div', {}, h('h2', { style: 'margin-top:0' }, EPILOGUE.title),
+      h('p', { class: 'notice' }, EPILOGUE.disclaimer),
+      renderBlocks(EPILOGUE.blocks),
+      h('p', { class: 'small' }, `開啟時間：${fmt(a.epilogueOpenedAt)}。看過後記不會改寫你已提交的決策。`)));
+  };
+  if (a.epilogueOpenedAt) fill();
+  else box.append(h('p', { style: 'margin-top:0' }, '後記描述公司後來的作法，不是唯一正確答案。你的決策已提交，閱讀後記不會改變它。'),
+    h('button', { type: 'button', class: 'btn btn-primary', onclick: () => { a.epilogueOpenedAt = nowISO(); saveNow(); fill(); box.focus(); } },
+      '我已完成決策，閱讀後記'));
+  return box;
+}
+
+/* ---------- 畫面 11：摘要與匯出 ---------- */
+function renderRecord(rec, a) {
+  const p = a.plan;
+  const plan = (g, id) => planLabel(g, id) || '';
+  return h('div', { class: 'record' },
+    h('section', { class: 'rec-sec' }, h('h2', {}, '基本資料'),
+      h('dl', { class: 'kv' },
+        h('dt', {}, '課程／班級代碼'), h('dd', {}, rec.classCode),
+        h('dt', {}, '作答代碼'), h('dd', {}, `${rec.respondentCode}（${rec.respondentType === 'group' ? '組別' : '個人'}）`),
+        h('dt', {}, '嘗試'), h('dd', {}, `第 ${a.number} 次｜${a.attemptId}`),
+        h('dt', {}, '開始'), h('dd', {}, fmt(a.startedAt)),
+        h('dt', {}, '完成'), h('dd', {}, a.completedAt ? fmt(a.completedAt) : '尚未提交'),
+        h('dt', {}, '版本'), h('dd', {}, `${CONFIG.version}（${CONFIG.edition === 'classroom' ? '課堂版' : '自學版'}）`))),
+    h('section', { class: 'rec-sec' }, h('h2', {}, '初選與最終選擇'),
+      h('div', { class: 'compare' }, choiceBlock(a.initial, '初步建議', false), choiceBlock(a.final, '最終選擇', true))),
+    h('section', { class: 'rec-sec' }, h('h2', {}, '證據分析'),
+      qa('最重要的問題與個案依據', a.analysis.keyIssue), qa('另一種可能解釋與仍缺少的資訊', a.analysis.alternative)),
+    h('section', { class: 'rec-sec' }, h('h2', {}, '權責與工作安排'),
+      qa('工具切換', plan('tool', p.toolChoice)), qa('工具：補充安排與理由', p.toolNote),
+      qa('跌倒偵測', plan('fall', p.fallChoice)), qa('跌倒偵測：啟動前必要條件', p.fallPreconditions),
+      qa('整合領導', plan('lead', p.leadChoice)), qa('權限、資源與報告對象', p.leadAuthority)),
+    h('section', { class: 'rec-sec' }, h('h2', {}, '溝通草稿'),
+      qa('給 John', p.msgJohn), qa('給加州團隊', p.msgCalifornia), qa('給董事會', p.msgBoard)),
+    h('section', { class: 'rec-sec' }, h('h2', {}, '30／60／90 天計畫'),
+      PHASES.map((t, i) => h('div', { class: 'card' }, h('h3', { class: 'cb-title' }, t),
+        qa('行動', p.phases[i].action), qa('負責角色', p.phases[i].owner),
+        qa('如何知道有進展', p.phases[i].signal), qa('什麼結果會讓我調整', p.phases[i].trigger)))),
+    EPILOGUE ? h('section', { class: 'rec-sec' }, h('h2', {}, '後記'), h('p', {}, a.epilogueOpenedAt ? `開啟時間：${fmt(a.epilogueOpenedAt)}` : '未開啟')) : null);
+}
+function reflectionRecord(a) {
+  return h('section', { class: 'rec-sec' }, h('h2', {}, '後記／討論後反思'),
+    qa('哪些機制可能有用？', a.reflection.useful), qa('仍有什麼不能證明？', a.reflection.unproven), qa('下次整合會怎樣做？', a.reflection.next));
+}
+function renderSummary() {
+  const a = cur();
+  const touch = () => { a.reflection.savedAt = nowISO(); };
+  const others = state.attempts.filter(x => x !== a);
+  return shell(LAST,
+    h('p', { class: 'warn' }, '尚未交給老師：請下載 JSON 或 CSV，自行上傳到課程指定位置。本網頁不會自動傳送。'),
+    renderRecord(state, a),
+    h('section', { class: 'rec-sec no-print' }, h('h2', {}, '後記／討論後反思'),
+      h('p', { class: 'small' }, EPILOGUE ? '讀完後記或課堂討論後填寫。反思會另外記錄，不會改寫你已提交的決策。'
+        : '老師發下後記或課堂討論後填寫。反思會另外記錄，不會改寫你已提交的決策。'),
+      textField({ obj: a.reflection, path: 'useful', label: '哪些機制可能有用？', onInput: touch }),
+      textField({ obj: a.reflection, path: 'unproven', label: '仍有什麼不能證明？', onInput: touch }),
+      textField({ obj: a.reflection, path: 'next', label: '下次整合會怎樣做？', onInput: touch })),
+    h('section', { class: 'rec-sec no-print' }, h('h2', {}, '下載與列印'),
+      h('div', { class: 'btn-row' },
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: () => downloadJSON(a) }, '下載 JSON'),
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: () => downloadCSV([a]) }, '下載 CSV'),
+        IN_CLAUDE ? null : h('button', { type: 'button', class: 'btn', onclick: doPrint }, '列印／另存 PDF'),
+        h('button', { type: 'button', class: 'btn', onclick: () => copyText(summaryText(state, a), '摘要') }, '複製摘要')),
+      h('p', { class: 'small' }, IN_CLAUDE ? '此網頁版無法直接列印；需要紙本時，請用「複製摘要」貼到文書軟體，或用電腦開啟下載版網頁列印。'
+        : '「列印／另存 PDF」會開啟瀏覽器列印視窗，可在其中選擇「另存為 PDF」。'),
+      h('button', { type: 'button', class: 'linkish', onclick: () => showManual(JSON.stringify(exportObject(state, a), null, 2), '下載沒有反應時：JSON 內容') },
+        '下載沒有反應？顯示內容以手動複製')),
+    others.length ? h('section', { class: 'rec-sec no-print' }, h('h2', {}, '此裝置上的其他嘗試'),
+      h('ul', {}, others.map(x => h('li', {}, `第 ${x.number} 次（${x.completedAt ? '已完成 ' + fmt(x.completedAt) : '未完成'}） `,
+        h('button', { type: 'button', class: 'linkish', onclick: () => downloadJSON(x) }, '下載 JSON'), ' ',
+        h('button', { type: 'button', class: 'linkish', onclick: () => downloadCSV([x]) }, '下載 CSV')))),
+      h('button', { type: 'button', class: 'btn', onclick: () => downloadCSV(state.attempts) }, '下載全部嘗試 CSV（一次嘗試一列）')) : null,
+    h('section', { class: 'rec-sec no-print' }, h('h2', {}, '重新作答或清除'),
+      h('div', { class: 'btn-row' },
+        h('button', { type: 'button', class: 'btn', onclick: redo }, '重新作答（另建一次嘗試）'),
+        h('button', { type: 'button', class: 'btn btn-danger', onclick: confirmClearCurrent }, '清除此裝置上的紀錄'))),
+    navRow(LAST));
+}
+async function redo() {
+  if (!(await ask(`要重新作答嗎？會另建第 ${state.attempts.length + 1} 次嘗試；已完成的紀錄會保留，不會被覆寫。`, '重新作答'))) return;
+  state.attempts.push(newAttempt(state.attempts.length + 1));
+  state.current = state.attempts.length - 1;
+  saveNow(); toast('已建立新的嘗試'); go(1);
+}
+
+/* ---------- 匯出 ---------- */
+function choiceExport(c, isFinal) {
+  if (!c) return null;
+  const o = {
+    optionId: c.optionId, optionLabel: optLabel(c.optionId),
+    combinedOptions: c.optionId === 'E' ? (c.combined || []) : null,
+    combinationNote: c.optionId === 'E' ? nn(c.combinationNote) : null,
+    reason: nn(c.reason), evidence: nn(c.evidence), risk: nn(c.risk)
+  };
+  if (isFinal) o.changeFromInitial = nn(c.change);
+  o.savedAt = c.savedAt || null;
+  return o;
+}
+function exportObject(rec, a) {
+  const p = a.plan;
+  const pc = (g, id) => id ? { id, label: planLabel(g, id) } : null;
+  return {
+    schema: rec.schema, version: CONFIG.version, edition: CONFIG.edition, activityCode: CONFIG.activityId,
+    classCode: rec.classCode, respondentCode: rec.respondentCode, respondentType: rec.respondentType,
+    attemptId: a.attemptId, attemptNumber: a.number, startedAt: a.startedAt, completedAt: a.completedAt || null,
+    initialChoice: choiceExport(a.initial, false),
+    analysis: { keyIssueAndEvidence: nn(a.analysis.keyIssue), alternativeAndMissingInfo: nn(a.analysis.alternative) },
+    implementationPlan: {
+      tools: { decision: pc('tool', p.toolChoice), note: nn(p.toolNote) },
+      fallDetectionPilot: { decision: pc('fall', p.fallChoice), preconditions: nn(p.fallPreconditions) },
+      leadership: { decision: pc('lead', p.leadChoice), authorityResourcesReporting: nn(p.leadAuthority) },
+      communication: { john: nn(p.msgJohn), californiaTeam: nn(p.msgCalifornia), board: nn(p.msgBoard) },
+      phases: PHASES.map((t, i) => ({ phase: t, action: nn(p.phases[i].action), ownerRole: nn(p.phases[i].owner),
+        progressSignal: nn(p.phases[i].signal), adjustTrigger: nn(p.phases[i].trigger) })),
+      updatedAt: p.updatedAt || null
+    },
+    finalChoice: choiceExport(a.final, true),
+    epilogueOpenedAt: a.epilogueOpenedAt || null,
+    reflection: { usefulMechanisms: nn(a.reflection.useful), stillUnproven: nn(a.reflection.unproven),
+      nextIntegration: nn(a.reflection.next), savedAt: a.reflection.savedAt || null },
+    exportedAt: nowISO()
+  };
+}
+const CSV_COLUMNS = [
+  ['版本', o => o.version], ['版別', o => o.edition], ['活動代碼', o => o.activityCode],
+  ['課程班級代碼', o => o.classCode], ['作答代碼', o => o.respondentCode], ['作答身分', o => o.respondentType === 'group' ? '組別' : '個人'],
+  ['attemptId', o => o.attemptId], ['嘗試次數', o => o.attemptNumber], ['開始時間', o => o.startedAt], ['完成時間', o => o.completedAt],
+  ...choiceCols('初選', o => o.initialChoice, false),
+  ['分析_最重要問題與依據', o => o.analysis.keyIssueAndEvidence], ['分析_其他解釋與缺少資訊', o => o.analysis.alternativeAndMissingInfo],
+  ['工具安排', o => lbl(o.implementationPlan.tools.decision)], ['工具_補充與理由', o => o.implementationPlan.tools.note],
+  ['跌倒偵測安排', o => lbl(o.implementationPlan.fallDetectionPilot.decision)], ['跌倒偵測_啟動前條件', o => o.implementationPlan.fallDetectionPilot.preconditions],
+  ['整合領導', o => lbl(o.implementationPlan.leadership.decision)], ['領導_權限資源與報告', o => o.implementationPlan.leadership.authorityResourcesReporting],
+  ['溝通_John', o => o.implementationPlan.communication.john], ['溝通_加州團隊', o => o.implementationPlan.communication.californiaTeam],
+  ['溝通_董事會', o => o.implementationPlan.communication.board],
+  ...PHASES.flatMap((t, i) => [
+    [`${t}_行動`, o => o.implementationPlan.phases[i].action], [`${t}_負責角色`, o => o.implementationPlan.phases[i].ownerRole],
+    [`${t}_進展指標`, o => o.implementationPlan.phases[i].progressSignal], [`${t}_調整條件`, o => o.implementationPlan.phases[i].adjustTrigger]]),
+  ['計畫最後更新', o => o.implementationPlan.updatedAt],
+  ...choiceCols('最終', o => o.finalChoice, true),
+  ['後記開啟時間', o => o.epilogueOpenedAt],
+  ['反思_可能有用的機制', o => o.reflection.usefulMechanisms], ['反思_仍不能證明', o => o.reflection.stillUnproven],
+  ['反思_下次整合', o => o.reflection.nextIntegration], ['反思保存時間', o => o.reflection.savedAt],
+  ['匯出時間', o => o.exportedAt]
+];
+function lbl(d) { return d ? d.label : null; }
+function choiceCols(pre, get, isFinal) {
+  const g = f => o => { const c = get(o); return c ? f(c) : null; };
+  const cols = [
+    [`${pre}_方案`, g(c => c.optionLabel)], [`${pre}_組合納入`, g(c => c.combinedOptions ? c.combinedOptions.join('、') : null)],
+    [`${pre}_組合說明`, g(c => c.combinationNote)], [`${pre}_理由`, g(c => c.reason)], [`${pre}_個案依據`, g(c => c.evidence)],
+    [`${pre}_${isFinal ? '最大代價' : '最擔心代價'}`, g(c => c.risk)]];
+  if (isFinal) cols.push([`${pre}_相較初選`, g(c => c.changeFromInitial)]);
+  cols.push([`${pre}_保存時間`, g(c => c.savedAt)]);
+  return cols;
+}
+function csvCell(v) {
+  let s = v == null ? '' : String(v);
+  s = s.replace(/\r\n?/g, '\n');
+  if (/^[=+\-@\u0000-\u001f\u007f]/.test(s)) s = "'" + s;   // 避免試算表公式注入
+  return '"' + s.replace(/"/g, '""') + '"';
+}
+function buildCSV(rec, attempts) {
+  const rows = [CSV_COLUMNS.map(c => csvCell(c[0])).join(',')];
+  attempts.forEach(a => { const o = exportObject(rec, a); rows.push(CSV_COLUMNS.map(c => csvCell(c[1](o))).join(',')); });
+  return '﻿' + rows.join('\r\n') + '\r\n';
+}
+function fileBase(a) { return `${safeName(CONFIG.activityId)}_${safeName(state.respondentCode)}_${safeName(a.attemptId)}`; }
+function downloadJSON(a) {
+  download(fileBase(a) + '.json', JSON.stringify(exportObject(state, a), null, 2), 'application/json;charset=utf-8');
+}
+function downloadCSV(list) {
+  const name = list.length === 1 ? fileBase(list[0]) + '.csv' : `${safeName(CONFIG.activityId)}_${safeName(state.respondentCode)}_all.csv`;
+  download(name, buildCSV(state, list), 'text/csv;charset=utf-8');
+}
+/* 在 claude.ai 內開啟時，下載必須透過平台的 downloads 能力；直接開檔時用一般下載。 */
+const IN_CLAUDE = !!(window.claude && typeof window.claude.use === 'function');
+let downloadsApi;
+async function getDownloads() {
+  if (!IN_CLAUDE) return null;
+  if (downloadsApi === undefined) { try { downloadsApi = await window.claude.use('downloads'); } catch (e) { downloadsApi = null; } }
+  return downloadsApi;
+}
+async function download(name, content, mime) {
+  if (IN_CLAUDE) {
+    const api = await getDownloads();
+    if (!api) { showManual(content.replace(/^\uFEFF/, ''), `此處無法下載：${name}`); return; }
+    try {
+      await api.save({ filename: name, data: content });
+      exportedThisSession = true;
+      toast(`已下載 ${name}。請上傳到課程指定位置。`);
+    } catch (e) {
+      if (e && e.code === 'declined') { toast('已取消下載'); return; }
+      if (e && e.code === 'rate_limited') { toast('下載視窗已開啟，請先完成或關閉它'); return; }
+      showManual(content.replace(/^\uFEFF/, ''), `無法下載：${name}`);
+    }
+    return;
+  }
+  try {
+    const url = URL.createObjectURL(new Blob([content], { type: mime }));
+    const link = h('a', { href: url, download: name, hidden: true });
+    document.body.append(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    exportedThisSession = true;
+    toast(`已產生 ${name}。請到下載資料夾確認，並上傳到課程指定位置。`);
+  } catch (e) {
+    showManual(content.replace(/^\uFEFF/, ''), `無法自動下載：${name}`);
+  }
+}
+function summaryText(rec, a) {
+  const L = [], add = (k, v) => L.push(`${k}：${blank(v) ? '（未填）' : v}`);
+  const ch = (title, c, fin) => {
+    L.push('', `【${title}】`);
+    if (!c) { L.push('（尚未保存）'); return; }
+    add('方案', optLabel(c.optionId));
+    if (c.optionId === 'E') { add('納入的提議', (c.combined || []).map(optLabel).join('、')); add('組合或其他方案說明', c.combinationNote); }
+    add('理由', c.reason); add('個案依據', c.evidence); add(fin ? '最大代價' : '最擔心的代價', c.risk);
+    if (fin) add('相較初選', c.change);
+    add('保存時間', fmt(c.savedAt));
+  };
+  const p = a.plan;
+  L.push(CONTENT.title, `課程／班級：${rec.classCode}｜作答代碼：${rec.respondentCode}｜第 ${a.number} 次｜${a.attemptId}`,
+    `開始：${fmt(a.startedAt)}｜完成：${a.completedAt ? fmt(a.completedAt) : '尚未提交'}`);
+  ch('初步建議', a.initial, false); ch('最終選擇', a.final, true);
+  L.push('', '【證據分析】'); add('最重要的問題與依據', a.analysis.keyIssue); add('其他解釋與缺少的資訊', a.analysis.alternative);
+  L.push('', '【權責與工作安排】');
+  add('工具切換', planLabel('tool', p.toolChoice)); add('工具補充', p.toolNote);
+  add('跌倒偵測', planLabel('fall', p.fallChoice)); add('啟動前條件', p.fallPreconditions);
+  add('整合領導', planLabel('lead', p.leadChoice)); add('權限、資源與報告', p.leadAuthority);
+  L.push('', '【溝通草稿】'); add('給 John', p.msgJohn); add('給加州團隊', p.msgCalifornia); add('給董事會', p.msgBoard);
+  L.push('', '【30／60／90 天計畫】');
+  PHASES.forEach((t, i) => { L.push(`〈${t}〉`); add('行動', p.phases[i].action); add('負責角色', p.phases[i].owner);
+    add('如何知道有進展', p.phases[i].signal); add('什麼結果會讓我調整', p.phases[i].trigger); });
+  L.push('', '【後記／討論後反思】'); add('哪些機制可能有用', a.reflection.useful); add('仍有什麼不能證明', a.reflection.unproven); add('下次整合會怎樣做', a.reflection.next);
+  return L.join('\n');
+}
+async function copyText(text, what) {
+  try {
+    if (navigator.clipboard && window.isSecureContext !== false) { await navigator.clipboard.writeText(text); toast(`已複製${what}`); return; }
+    throw new Error('no clipboard');
+  } catch (e) {
+    try {
+      const ta = h('textarea', { style: 'position:fixed;left:-9999px;top:0', readonly: true }); ta.value = text;
+      document.body.append(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove();
+      if (ok) { toast(`已複製${what}`); return; }
+    } catch (e2) { /* 改用手動複製 */ }
+    showManual(text, `無法自動複製${what}`);
+  }
+}
+function showManual(text, title) {
+  const body = $('#textBody'); body.textContent = '';
+  $('#textTitle').textContent = title || '手動複製';
+  const ta = h('textarea', { class: 'manual-ta', readonly: true, 'aria-label': '可複製的內容' }); ta.value = text;
+  body.append(h('p', {}, '請點選下方「全選」，再用「複製」（手機可長按選取），貼到文字檔或課程平台中保存。'),
+    ta, h('div', { class: 'btn-row' }, h('button', { type: 'button', class: 'btn btn-primary', onclick: () => { ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length); } }, '全選')));
+  openDialog($('#textDlg'));
+}
+
+/* ---------- 確認視窗（不使用瀏覽器 confirm，以便在 claude.ai 內也能運作） ---------- */
+function ask(message, okLabel, danger) {
+  return new Promise(resolve => {
+    const d = $('#askDlg'), ok = $('#askOk'), cancel = $('#askCancel');
+    $('#askMsg').textContent = message;
+    ok.textContent = okLabel || '確定';
+    ok.className = 'btn ' + (danger ? 'btn-danger' : 'btn-primary');
+    const prevFocus = document.activeElement;
+    let done = false;
+    const finish = v => {
+      if (done) return; done = true;
+      ok.onclick = cancel.onclick = null; d.removeEventListener('close', onClose);
+      if (typeof d.close === 'function') { if (d.open) d.close(); } else d.removeAttribute('open');
+      if (prevFocus && document.contains(prevFocus)) prevFocus.focus({ preventScroll: true });
+      resolve(v);
+    };
+    const onClose = () => finish(false);
+    ok.onclick = () => finish(true); cancel.onclick = () => finish(false);
+    d.addEventListener('close', onClose);
+    if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
+    cancel.focus();
+  });
+}
+
+/* ---------- 列印 ---------- */
+function fillPrint() {
+  const pa = $('#print-area'); pa.textContent = '';
+  if (!state) { pa.append(h('p', {}, '尚未開始作答。')); return; }
+  const a = cur();
+  pa.append(h('h1', {}, CONTENT.title), renderRecord(state, a), reflectionRecord(a),
+    h('p', { class: 'small' }, `列印時間：${fmt(nowISO())}。依個案整理的互動版作答紀錄。`));
+}
+function doPrint() { fillPrint(); window.print(); }
+window.addEventListener('beforeprint', fillPrint);
+
+/* ---------- 對話框：資料夾、目錄 ---------- */
+let lastFocus = null;
+function openDialog(d) {
+  lastFocus = document.activeElement;
+  if (typeof d.showModal === 'function') { if (!d.open) d.showModal(); } else d.setAttribute('open', '');
+  const c = d.querySelector('[data-close]'); if (c) c.focus();
+}
+function closeDialog(d) {
+  if (typeof d.close === 'function') { if (d.open) d.close(); } else { d.removeAttribute('open'); }
+}
+function closeAllDialogs() { document.querySelectorAll('dialog').forEach(closeDialog); }
+document.querySelectorAll('dialog').forEach(d => {
+  const c = d.querySelector('[data-close]');
+  if (c) c.addEventListener('click', () => closeDialog(d));
+  d.addEventListener('close', () => { if (lastFocus && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true }); });
+  d.addEventListener('click', e => { if (e.target === d) closeDialog(d); });
+});
+function buildFolder() {
+  const b = $('#folderBody'); b.textContent = '';
+  const jump = id => e => { e.preventDefault(); const s = document.getElementById(id); if (s) { s.scrollIntoView({ block: 'start' }); s.focus({ preventScroll: true }); } };
+  const caseText = h('section', { id: 'fd-case', tabindex: '-1' }, h('h3', { class: 'ex-title' }, '個案正文'),
+    h('details', { class: 'cons' }, h('summary', {}, '展開個案正文（與各步驟內容相同）'),
+      h('h4', {}, '星期五晚上：一封辭職信'), renderBlocks(CONTENT.letter.blocks),
+      CONTENT.companies.map(c => [h('h4', {}, c.title.replace(/^[①-⑤]\s*/, '')), renderBlocks(c.blocks)]),
+      h('h4', {}, '六個月的摩擦'), h('p', {}, CONTENT.friction.intro),
+      CONTENT.friction.events.map(e => [h('p', {}, h('strong', {}, e.title)), renderBlocks(e.blocks)]),
+      renderBlocks(CONTENT.friction.after),
+      h('h4', {}, '週末收到的三則訊息與 Jennifer 的提議'), renderBlocks(CONTENT.proposalsIntro.slice(0, 1)),
+      CONTENT.proposals.map(p => [h('p', {}, h('strong', {}, `${p.who}：${p.title}`)), h('p', {}, p.text),
+        h('ul', {}, p.moves.map(m => h('li', {}, m))), p.scope ? h('p', {}, p.scope) : null]),
+      h('ul', {}, CONTENT.pressure.map(x => h('li', {}, x))),
+      renderBlocks([CONTENT.kenQuote]), renderBlocks(CONTENT.closing)));
+  b.append(h('div', {},
+    h('p', { class: 'small' }, CONTENT.anonymity),
+    h('nav', { class: 'toc', 'aria-label': '資料夾內容' },
+      h('a', { href: '#fd-case', onclick: jump('fd-case') }, '正文'),
+      EXHIBITS.map(x => h('a', { href: '#fd-ex' + x.id, onclick: jump('fd-ex' + x.id) }, x.id === '7b' ? '附表 7（續）' : '附表 ' + x.id))),
+    caseText,
+    EXHIBITS.map(x => exhibitView(x, false)),
+    h('section', {}, h('h3', { class: 'ex-title' }, '公開統計資料來源'), h('ul', { class: 'small' }, EXHIBIT_SOURCES.map(s => h('li', {}, s))))));
+}
+function buildMenu() {
+  const b = $('#menuBody'); b.textContent = '';
+  const list = h('ol', { class: 'steplist' }, STEPS.map((s, i) => {
+    const ok = canVisit(i);
+    return h('li', {}, h('button', { type: 'button', class: 'btn', disabled: !ok || null, 'aria-current': i === viewStep ? 'step' : null,
+      onclick: () => { closeDialog($('#menuDlg')); go(i); } }, i === 0 ? '開始' : `${i}. ${s.title}`, ok ? '' : '（尚未開放）'));
+  }));
+  const sizes = [18, 20, 22, 24];
+  const curSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--fs'), 10) || 18;
+  b.append(h('h3', {}, '步驟'), list,
+    h('h3', {}, '字級'),
+    h('div', { class: 'btn-row', role: 'group', 'aria-label': '字級' }, sizes.map(s => h('button', { type: 'button', class: 'btn' + (s === curSize ? ' btn-primary' : ''),
+      'aria-pressed': s === curSize ? 'true' : 'false', onclick: () => { setFont(s); buildMenu(); } }, `${s}px`))),
+    h('h3', {}, '保存狀態'), h('p', { id: 'saveStatus', class: 'small' }),
+    state ? h('div', { class: 'btn-row' }, h('button', { type: 'button', class: 'btn btn-danger', onclick: confirmClearCurrent }, '清除此裝置上的本次紀錄')) : null);
+  updateSaveStatus();
+}
+function setFont(px) {
+  document.documentElement.style.setProperty('--fs', px + 'px');
+  try { localStorage.setItem(fontKey(), String(px)); } catch (e) { /* 忽略 */ }
+}
+$('#btnFolder').addEventListener('click', () => { buildFolder(); openDialog($('#folderDlg')); });
+$('#btnMenu').addEventListener('click', () => { buildMenu(); openDialog($('#menuDlg')); });
+
+window.addEventListener('beforeunload', e => {
+  if (saveTimer) saveNow();
+  if (state && (!storageOK || saveFailed) && !exportedThisSession) { e.preventDefault(); e.returnValue = ''; }
+});
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && saveTimer) saveNow(); });
+
+/* ---------- 啟動 ---------- */
+(function init() {
+  document.documentElement.lang = 'zh-Hant-TW';
+  storageOK = testStorage();
+  if (storageOK) {
+    const f = parseInt(localStorage.getItem(fontKey()), 10);
+    if ([18, 20, 22, 24].includes(f)) document.documentElement.style.setProperty('--fs', f + 'px');
+    const ptr = readJSON(pointerKey());
+    if (ptr) {
+      const rec = readJSON(recordKey(ptr.classCode, ptr.respondentCode));
+      if (rec && rec.attempts && rec.attempts.length) pending = rec;
+    }
+  }
+  viewStep = 0;
+  render();
+})();
+</script>
+</body>
+</html>
